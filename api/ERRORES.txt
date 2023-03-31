@@ -1,0 +1,2 @@
+'error' => 1, 'output' => 'Servicio No Encontrado'
+'error' => 2, 'output' => 'Faltan parametros'

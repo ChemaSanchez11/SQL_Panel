@@ -1,0 +1,50 @@
+[
+    {
+        "id": 1,
+        "token": "9D5vonYDnUArWiS74Qe+QVKaGmpZMqFJIOcyZ7tI",
+        "ip": "127.0.0.1",
+        "host": "localhost",
+        "user": "root",
+        "password": "",
+        "port": "3306",
+        "databases": [],
+        "active": false,
+        "visible": "yes"
+    },
+    {
+        "id": 2,
+        "token": "9D5vonYDnUArWhux8BC3W2KIClhCM5FiTIsxYg==",
+        "ip": "127.0.0.1",
+        "host": "Server",
+        "user": "admin",
+        "password": "",
+        "port": "3306",
+        "databases": [],
+        "active": false,
+        "visible": "yes"
+    },
+    {
+        "id": 3,
+        "token": "9D5vonYDnUArWjyx8RKNXViaGmpfOL1JIIsyZL0=",
+        "ip": "127.0.0.1",
+        "host": "test",
+        "user": "test",
+        "password": "test",
+        "port": "3306",
+        "databases": [],
+        "active": false,
+        "visible": "yes"
+    },
+    {
+        "id": 4,
+        "token": "9D5vonYDnUArWiS74Qe+QVKaGhUZArxSEMxeYb5KY\/oGD4H+",
+        "ip": "127.0.0.1",
+        "host": "localhost 2",
+        "user": "root",
+        "password": "5546",
+        "port": "3306",
+        "databases": [],
+        "active": false,
+        "visible": "yes"
+    }
+]

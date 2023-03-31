@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "token": "9091ynYAmCo3MAn5tiD\/Gw+2AlpIPKJVEMt1C\/kROtFqY4L7\/mk=",
+        "mac": "2C-F0-5D-5A-4F-22",
+        "host": "localhost",
+        "user": "root",
+        "password": "",
+        "port": 3306,
+        "active": "yes"
+    },
+    {
+        "id": 2,
+        "token": "9091ynYAmCo3MAn5tiD\/Gw+2BlpYKZFIDN1zC9RNZpUD",
+        "mac": "2C-F0-5D-5A-4F-22",
+        "host": "host",
+        "user": "user",
+        "password": "",
+        "port": 3306,
+        "active": "yes"
+    }
+]
