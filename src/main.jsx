@@ -7,10 +7,13 @@ import Nav from "./components/Nav.jsx";
 import ServersList from "./components/ServersList.jsx";
 import ModalAddHost from "./components/ModalAddHost";
 import ModalInfo from "./components/ModalInfo.jsx";
+import Login from "./components/Login.jsx";
 
 function Main() {
     const [servers, setServers] = useState([]);
     const [status, setStatus] = useState();
+
+    document.body.classList.add('bg-dark');
 
     return (
         <React.Fragment>
@@ -25,5 +28,6 @@ function Main() {
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-    <Main/>
+    // <Main/>
+    <Login></Login>
 );

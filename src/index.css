@@ -6,6 +6,10 @@ nav {
   background-color: #343a40 !important;
 }
 
+.bg-gradient {
+  background-image: url('public/bg/bg-gradient.png') !important;
+}
+
 a, .database {
   cursor: pointer;
   text-decoration: none !important;
