@@ -7,6 +7,11 @@ nav {
 }
 
 .bg-gradient {
+  background: url('public/bg/bg-gradient.png') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
   background-image: url('public/bg/bg-gradient.png') !important;
 }
 

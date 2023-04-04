@@ -10,6 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function Login({status}) {
 
     document.body.classList.add('bg-gradient');
+    document.querySelector('html').classList.add('bg-gradient');
 
     return (
         <div className="bg-danger"></div>
