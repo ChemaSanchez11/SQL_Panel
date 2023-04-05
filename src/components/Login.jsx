@@ -10,10 +10,33 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function Login({status}) {
 
     document.body.classList.add('bg-gradient');
-    document.querySelector('html').classList.add('bg-gradient');
+    // document.querySelector('html').classList.add('bg-gradient');
 
     return (
-        <div className="bg-danger"></div>
+        <div className="w-100 h-100 m-0">
+            <div className="login-container">
+                <div className="login-form">
+                    <div className="text">
+                        Iniciar Sesion
+                    </div>
+                    <form>
+                        <div className="field">
+                            <div className="fas fa-duotone fa-user-secret text-success"></div>
+                            <input type="text" placeholder="Usuario" />
+                        </div>
+                        <div className="field">
+                            <div className="fas fa-lock text-success"></div>
+                            <input type="password" placeholder="Contraseña" />
+                        </div>
+                        <button>Acceder</button>
+                        <div className="link">
+                            ¿Eres nuevo?
+                            <a href="#"> Registrate</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     )
 }
 

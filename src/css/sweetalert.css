@@ -1,0 +1,72 @@
+.swal2-popup {
+  display: none;
+  position: relative;
+  box-sizing: border-box;
+  grid-template-columns: minmax(0, 100%);
+  width: 32em;
+  max-width: 100%;
+  padding: 0 0 1.25em;
+  border: none;
+  border-radius: 5px;
+  background: rgba(55, 55, 55, 0.568627451) !important;
+  color: #545454;
+  font-family: inherit;
+  font-size: 1rem;
+}
+.swal2-popup.swal2-toast {
+  background: #474e54 !important;
+}
+
+.swal2-title {
+  position: relative;
+  max-width: 100%;
+  margin: 0;
+  padding: 0.8em 1em 0;
+  color: white !important;
+  font-size: 1.875em;
+  font-weight: 600;
+  text-align: center;
+  text-transform: none;
+  word-wrap: break-word;
+}
+.swal2-title {
+  color: white !important;
+}
+
+.swal2-styled:focus {
+  box-shadow: none !important;
+}
+
+.swal2-styled.swal2-cancel {
+  background-color: #f26766 !important;
+  color: #fff;
+}
+
+.swal2-html-container {
+  z-index: 1;
+  justify-content: center;
+  margin: 1em 1.6em 0.3em;
+  padding: 0;
+  overflow: auto;
+  color: #e1e1e1 !important;
+  font-size: 1.125em;
+  font-weight: normal;
+  line-height: normal;
+  text-align: center;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+body.swal2-toast-shown .swal2-container.swal2-top-end {
+  margin-top: 0.2rem;
+}
+
+.swal2-success-fix, .swal2-success-circular-line-right, .swal2-success-circular-line-left {
+  background: none !important;
+}
+
+.swal-width {
+  width: fit-content !important;
+}
+
+/*# sourceMappingURL=sweetalert.css.map */

@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import ReactDOM from 'react-dom/client'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './index.css'
-import "./scss/sweetalert.css";
+import './css/main.css'
+import "./css/sweetalert.css";
 import Nav from "./components/Nav.jsx";
 import ServersList from "./components/ServersList.jsx";
 import ModalAddHost from "./components/ModalAddHost";
