@@ -1,0 +1,30 @@
+[
+    {
+        "id": 1,
+        "username": "ChemaSanchez11",
+        "password": "fghfghfhg",
+        "rol": [
+            "user"
+        ],
+        "visible": "yes"
+    },
+    {
+        "id": 2,
+        "username": "AnitaPV",
+        "password": "prueba",
+        "rol": [
+            "user"
+        ],
+        "visible": "yes"
+    },
+    {
+        "id": 3,
+        "username": "Prueba",
+        "password": "cHJ1ZWJh",
+        "rol": [
+            "user"
+        ],
+        "ip": "::1",
+        "visible": "yes"
+    }
+]

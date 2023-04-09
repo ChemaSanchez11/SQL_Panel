@@ -1,3 +1,4 @@
+@charset "UTF-8";
 nav {
   background: #3c4349 !important;
 }
@@ -7,12 +8,12 @@ nav {
 }
 
 .bg-gradient {
-  background: url("public/bg/bg-gradient.png") no-repeat center center fixed;
+  background: url("/bg/bg-gradient.png") no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  background-image: url("public/bg/bg-gradient.png") !important;
+  background-image: url("/bg/bg-gradient.png") !important;
 }
 
 a, .database {
@@ -240,7 +241,7 @@ form button {
 }
 
 button {
-  margin-top: 30px;
+  margin-top: 1rem;
   border-radius: 5px !important;
   font-weight: 600;
   letter-spacing: 1px;
@@ -264,6 +265,36 @@ button:hover {
   text-decoration: underline;
 }
 
+.login-form-login {
+  animation-name: slideInRight; /* Deslizar hacia la derecha */
+  animation-duration: 1s;
+}
+
+.login-form-register {
+  animation-name: slideInLeft; /* Deslizar hacia la izquierda */
+  animation-duration: 1s;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%); /* Desplazamiento desde la derecha */
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0); /* Volver a la posición original */
+  }
+}
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100%); /* Desplazamiento desde la izquierda */
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0); /* Volver a la posición original */
+  }
+}
 .spinner {
   display: inline-block;
   width: 51.2px;
@@ -282,7 +313,7 @@ button:hover {
   margin-top: 1.6em;
   text-align: center;
   font-size: 80%;
-  color: hsla(0, 0%, 0%, 0.4);
+  color: hsla(0deg, 0%, 0%, 0.4);
 }
 
 .spinner .spinner-circle {

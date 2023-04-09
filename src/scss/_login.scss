@@ -98,7 +98,7 @@ form {
 }
 
 button {
-  margin-top: 30px;
+  margin-top: 1rem;
   border-radius: 5px!important;
   font-weight: 600;
   letter-spacing: 1px;
@@ -126,5 +126,39 @@ button {
     &:hover {
       text-decoration: underline;
     }
+  }
+}
+
+//Animaciones
+
+.login-form-login {
+  animation-name: slideInRight; /* Deslizar hacia la derecha */
+  animation-duration: 1s;
+}
+
+.login-form-register {
+  animation-name: slideInLeft; /* Deslizar hacia la izquierda */
+  animation-duration: 1s;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%); /* Desplazamiento desde la derecha */
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0); /* Volver a la posición original */
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100%); /* Desplazamiento desde la izquierda */
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0); /* Volver a la posición original */
   }
 }

@@ -1,2 +1,4 @@
 'error' => 1, 'output' => 'Servicio No Encontrado'
 'error' => 2, 'output' => 'Faltan parametros'
+'error' => 3, 'output' => 'Este usuario ya existe'
+'error' => 4, 'output' => 'Este usuario no existe | Contraseña no valida'

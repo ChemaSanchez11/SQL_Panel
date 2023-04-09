@@ -1,6 +1,5 @@
 <?php
 require_once(__DIR__ . '/../lib/functions.php');
-require_once(__DIR__ . '/../lib/database.php');
 require_once(__DIR__ . '/../lib/ConnectionPool.php');
 
 header('Content-Type: application/json');
@@ -8,15 +7,14 @@ header('Content-Type: application/json');
 class API
 {
 
-
     public function get_servers()
     {
-        $servers = @file_get_contents(__DIR__ . '/../hosts.json');
+        $servers = @file_get_contents(__DIR__ . '/../json/hosts.json');
 
         if (empty($servers)) {
             $servers = [];
             //Añadimos al archivo
-            $db = fopen(__DIR__ . '/../hosts.json', "w") or die("Error 405!");
+            $db = fopen(__DIR__ . '/../json/hosts.json', "w") or die("Error 405!");
             fwrite($db, json_encode($servers, JSON_PRETTY_PRINT));
             fclose($db);
         }
@@ -32,14 +30,14 @@ class API
 
             header("Content-type:application/json");
 
-            $host = !empty($_POST['new_server_host']) ? $_POST['new_server_host'] : 'localhost';
-            $user = !empty($_POST['new_server_user']) ? $_POST['new_server_user'] : 'root';
-            $pass = !empty($_POST['new_server_pass']) ? $_POST['new_server_pass'] : '';
-            $port = !empty($_POST['new_server_port']) ? $_POST['new_server_port'] : 3306;
+            $host = empty($_POST['new_server_host']) ? 'localhost' : $_POST['new_server_host'];
+            $user = empty($_POST['new_server_user']) ? 'root' : $_POST['new_server_user'];
+            $pass = empty($_POST['new_server_pass']) ? '' : $_POST['new_server_pass'];
+            $port = empty($_POST['new_server_port']) ? 3306 : $_POST['new_server_port'];
             $ip = $_SERVER['REMOTE_ADDR'];
             $token = encrypt($ip . '_' . $host . '_' . $user . '_' . $pass . '_' . $port);
 
-            $json = @file_get_contents(__DIR__ . '/../hosts.json');
+            $json = @file_get_contents(__DIR__ . '/../json/hosts.json');
             $json = json_decode($json);
 
             $id = 0;
@@ -64,12 +62,11 @@ class API
 
             !empty($json) ? array_push($json, $host) : $json = [$host];
 
-            $db = fopen(__DIR__ . '/../hosts.json', "w") or die("Error 405!");
+            $db = fopen(__DIR__ . '/../json/hosts.json', "w") or die("Error 405!");
 
             fwrite($db, json_encode($json, JSON_PRETTY_PRINT));
             fclose($db);
 
-            header("HTTP/1.1 200 OK");
             header('Content-type:application/json');
             header("HTTP/1.1 200 OK");
             return json_encode(['success' => true, 'error' => 0, 'output' => $json]);

@@ -1,27 +1,26 @@
 <?php
 
+require_once(__DIR__. '/src/LoginAPI.php');
 require_once(__DIR__. '/src/API.php');
 include_once __DIR__ . '/lib/database.php';
 
 global $CFG;
-
-// Definir las rutas
-$routes = array(
-    $CFG->wwwroot . '/get_servers' => 'test',
-    $CFG->wwwroot . '/add_server' => 'add_server.php',
-    $CFG->wwwroot . '/connect' => 'connect.php',
-    $CFG->wwwroot . '/get_tables' => 'get_tables.php',
-);
-
 
 // Retornar la ruta correspondiente al controlador o función
 function getRoute($url) {
 
     global $CFG;
 
+    $LoginAPI = new LoginAPI();
     $API = new API();
 
     switch($url){
+        case $CFG->wwwroot . '/login':
+            echo $LoginAPI->get_user_by_username();
+            break;
+        case $CFG->wwwroot . '/register':
+            echo $LoginAPI->create_user();
+            break;
         case $CFG->wwwroot . '/get_servers':
             echo $API->get_servers();
             break;
