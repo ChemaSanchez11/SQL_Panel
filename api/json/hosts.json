@@ -7,7 +7,7 @@
         "user": "root",
         "password": "",
         "port": "3306",
-        "databases": [],
+        "arr_databases": [],
         "active": false,
         "visible": "yes"
     },
@@ -19,7 +19,7 @@
         "user": "admin",
         "password": "",
         "port": "3306",
-        "databases": [],
+        "arr_databases": [],
         "active": false,
         "visible": "yes"
     },
@@ -31,7 +31,7 @@
         "user": "test",
         "password": "test",
         "port": "3306",
-        "databases": [],
+        "arr_databases": [],
         "active": false,
         "visible": "yes"
     },
@@ -43,7 +43,7 @@
         "user": "root",
         "password": "5546",
         "port": "3306",
-        "databases": [],
+        "arr_databases": [],
         "active": false,
         "visible": "yes"
     }

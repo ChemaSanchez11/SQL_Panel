@@ -66,7 +66,7 @@ if (!empty($_POST && $_POST['action'] === 'new_server')) {
 }
 
 if (!empty($_POST && $_POST['action'] === 'show_tables')) {
-    $dbase = $_POST['database'];
+    $dbase = $_POST['mariaDB'];
     $html = "<table id='table_databases' data-base='' class='table table-striped table-dark mt-2' style='width:100%'>
                 <thead>
                 <tr>
@@ -96,11 +96,11 @@ if (!empty($_POST && $_POST['action'] === 'show_tables')) {
 }
 
 if (!empty($_POST && $_POST['action'] === 'show_menu')) {
-    $dbases = $_POST['database'];
+    $dbases = $_POST['mariaDB'];
     $server_id = $_POST['server_id'];
     $html = '';
     foreach ($dbases as $dbase){
-        $html .= "<p onclick='javascript:click_on_database(this)' ondblclick='javascript:dropdown_tables(this)' data-server='". $server_id ."' data-database='". $dbase ."'  class='m-0 pl-5 pb-1 database'><img src='img/icons/148825.png' width='20' height='22' class='mr-2'><a>". $dbase ."</a></p>";
+        $html .= "<p onclick='javascript:click_on_database(this)' ondblclick='javascript:dropdown_tables(this)' data-server='". $server_id ."' data-mariaDB='". $dbase ."'  class='m-0 pl-5 pb-1 mariaDB'><img src='img/icons/148825.png' width='20' height='22' class='mr-2'><a>". $dbase ."</a></p>";
         $html .= "<br> <p class='table_$dbase mb-1 row d-none' style='padding-left: 4.5rem !important;'>";
         foreach ($database->show_tables($dbase) as $table) {
             $html .= "<span class='col-12'><img src='img/icons/table.png' width='20' height='22' class='mr-2'><a>$table->table</a></span>";

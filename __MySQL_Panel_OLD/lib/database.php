@@ -23,7 +23,7 @@ class database
     {
         //return array_column($this->db->query('SHOW TABLES')->fetch_all(),0);;
         $result = mysqli_query($this->db, "SELECT TABLE_SCHEMA FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' GROUP BY TABLE_SCHEMA");
-        //$result = mysqli_query($this->db, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA LIKE '$database';");
+        //$result = mysqli_query($this->db, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA LIKE '$mariaDB';");
         $std = new stdClass();
 
         for ($i = 1; $row = $result->fetch_assoc(); $i++) {
@@ -49,7 +49,7 @@ class database
     {
         //return array_column($this->db->query('SHOW TABLES')->fetch_all(),0);;
         $result = mysqli_query($this->db, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA ='$database'");
-        //$result = mysqli_query($this->db, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA LIKE '$database';");
+        //$result = mysqli_query($this->db, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA LIKE '$mariaDB';");
         $std = new stdClass();
 
         for ($i = 1; $row = $result->fetch_assoc(); $i++) {

@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useForm} from "react-hook-form";
 import userLogin from "../helpers/userLogin.js";
 import userRegister from "../helpers/userRegister.js";
 import Swal from "sweetalert2";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useUserContext } from "../contexts/UserContext.jsx";
+import { useNavigate } from 'react-router-dom';
 
+//TODO: TERMINAR REGISTER
 function Login() {
     const [isLogin, setIsLogin] = useState(true);
+    const [userUpdated, setUserUpdated] = useState(false);
     const { register, handleSubmit, setError, formState: { errors } } = useForm();
+    const navigate = useNavigate();
+
+    //Contexto del usuario
+    let {user, setUser} = useUserContext();
 
     document.body.classList.add('bg-gradient');
 
@@ -29,7 +37,7 @@ function Login() {
             userLogin(data)
                 .then(result => {
                     if (typeof result !== 'undefined' && result.success) {
-                        console.log(result);
+                        updateUserAndNavigate(result.output);
                     } else if (result.error === 4) {
 
                         Toast.fire({
@@ -89,9 +97,22 @@ function Login() {
         }
     };
 
+
     const handleChangeMethod = () => {
         setIsLogin(!isLogin); // Invierte el valor booleano
     };
+
+    //Actualizamos el usuario y el estado se actualizacion de usuario
+    const updateUserAndNavigate = (newUserData) => {
+        setUser(newUserData);
+        setUserUpdated(true);
+    };
+
+    useEffect(() => {
+        if (userUpdated) {
+            navigate("/");
+        }
+    }, [userUpdated, navigate]);
 
     return (
         <div className="w-100 h-100 m-0">

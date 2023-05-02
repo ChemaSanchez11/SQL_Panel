@@ -19,7 +19,7 @@ if(!empty($_POST && $_POST['action'] === 'connect_db')){
     {
         $_SESSION['server'] = $info;
         $array_databases = [];
-        $database = new database($info[1].':'.$info[4], $info[2], $info[3]);
+        $database = new mariaDB($info[1].':'.$info[4], $info[2], $info[3]);
 
         foreach($database->get_databases() as $databases){
             array_push($array_databases, $databases->database);

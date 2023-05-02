@@ -9,24 +9,18 @@ class API
 
     public function get_servers()
     {
-        $servers = @file_get_contents(__DIR__ . '/../json/hosts.json');
+        global $DB;
 
-        if (empty($servers)) {
-            $servers = [];
-            //Añadimos al archivo
-            $db = fopen(__DIR__ . '/../json/hosts.json', "w") or die("Error 405!");
-            fwrite($db, json_encode($servers, JSON_PRETTY_PRINT));
-            fclose($db);
-        }
-
+        $user_id = $_POST['user_id'];
         header("HTTP/1.1 200 OK");
-        return json_encode(['success' => true, 'error' => 0, 'output' => $servers]);
+        return json_encode(['success' => true, 'error' => 0, 'output' => $DB->get_conections("SELECT * FROM host WHERE user_id = $user_id")]);
     }
 
     public function add_server()
     {
+        global $DB;
 
-        if (!empty($_POST) && (!isset($_POST['new_server_host']) || !empty($_POST['new_server_host'])) && (!isset($_POST['new_server_user']) || !empty($_POST['new_server_user'])) && (!isset($_POST['new_server_port']) || !empty($_POST['new_server_port']))) {
+        if (!empty($_POST) && (!isset($_POST['new_server_host']) || !empty($_POST['new_server_host'])) && (!isset($_POST['new_server_user']) || !empty($_POST['new_server_user'])) && (!isset($_POST['new_server_port']) || !empty($_POST['new_server_port'])) && (!isset($_POST['user_id']) || !empty($_POST['user_id']))) {
 
             header("Content-type:application/json");
 
@@ -36,40 +30,13 @@ class API
             $port = empty($_POST['new_server_port']) ? 3306 : $_POST['new_server_port'];
             $ip = $_SERVER['REMOTE_ADDR'];
             $token = encrypt($ip . '_' . $host . '_' . $user . '_' . $pass . '_' . $port);
+            $user_id = $_POST['user_id'];
 
-            $json = @file_get_contents(__DIR__ . '/../json/hosts.json');
-            $json = json_decode($json);
-
-            $id = 0;
-            if (!empty($json)) {
-                $id = end($json)->id;
-            }
-
-            $id++;
-
-            $host = array(
-                "id" => $id,
-                "token" => "$token",
-                "ip" => "$ip",
-                "host" => "$host",
-                "user" => "$user",
-                "password" => "$pass",
-                "port" => $port,
-                "databases" => [],
-                "active" => false,
-                "visible" => "yes"
-            );
-
-            !empty($json) ? array_push($json, $host) : $json = [$host];
-
-            $db = fopen(__DIR__ . '/../json/hosts.json', "w") or die("Error 405!");
-
-            fwrite($db, json_encode($json, JSON_PRETTY_PRINT));
-            fclose($db);
+            $DB->insert("INSERT INTO host (token, ip, host, user, password, port, arr_databases, active, visible, user_id) VALUES ('$token', '$ip', '$host', '$user', '$pass', '$port', '[]', true, 'yes', $user_id);");
 
             header('Content-type:application/json');
             header("HTTP/1.1 200 OK");
-            return json_encode(['success' => true, 'error' => 0, 'output' => $json]);
+            return json_encode(['success' => true, 'error' => 0, 'output' => $DB->get_conections("SELECT * FROM host WHERE user_id = $user_id")]);
 
         } else {
             header("HTTP/1.1 400 Bad Request");
@@ -127,14 +94,14 @@ class API
 
 //                $array_tables = [];
 //
-//                foreach ($DB->show_tables($_POST['database']) as $table) {
+//                foreach ($DB->show_tables($_POST['mariaDB']) as $table) {
 //                    array_push($array_tables, $table->table);
 //                }
 
-                $tables = $DB->show_tables($_POST['database']);
+                $tables = $DB->show_tables($_POST['mariaDB']);
 
                 header("HTTP/1.1 200 OK");
-                return json_encode(['success' => true, 'error' => 0, 'output' => ['database' => $_POST['database'], 'tables' => $tables]]);
+                return json_encode(['success' => true, 'error' => 0, 'output' => ['mariaDB' => $_POST['mariaDB'], 'tables' => $tables]]);
             } else {
                 header("HTTP/1.1 400 Bad Request");
                 return json_encode(['success' => false, 'error' => 6, 'output' => $DB->error]);

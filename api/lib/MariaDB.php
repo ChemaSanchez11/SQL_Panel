@@ -1,6 +1,6 @@
 <?php
 
-class database
+class MariaDB
 {
 
     public $status = false;
@@ -11,7 +11,7 @@ class database
     {
 
         if(empty($this->db)){
-            $this->db = @mysqli_connect($host.':'.$port, $user, $pass);
+            $this->db = @mysqli_connect($host.':'.$port, $user, $pass, 'sql_panel');
             $_SESSION['db'] = $this->db;
         }
 
@@ -25,7 +25,7 @@ class database
     {
         //return array_column($this->db->query('SHOW TABLES')->fetch_all(),0);;
         $result = mysqli_query($this->db, "SELECT TABLE_SCHEMA FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' GROUP BY TABLE_SCHEMA");
-        //$result = mysqli_query($this->db, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA LIKE '$database';");
+        //$result = mysqli_query($this->db, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA LIKE '$mariaDB';");
         $std = new stdClass();
 
         for ($i = 1; $row = $result->fetch_assoc(); $i++) {
@@ -51,7 +51,7 @@ class database
     {
         //return array_column($this->db->query('SHOW TABLES')->fetch_all(),0);;
         $result = mysqli_query($this->db, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA ='$database'");
-        //$result = mysqli_query($this->db, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA LIKE '$database';");
+        //$result = mysqli_query($this->db, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA LIKE '$mariaDB';");
         $std = new stdClass();
 
         for ($i = 1; $row = $result->fetch_assoc(); $i++) {
@@ -71,6 +71,30 @@ class database
         }
 
         return $std;
+    }
+
+    public function get_conections($query)
+    {
+
+        $DB = $this->db;
+
+        $result = $DB->query($query);
+        if (!empty(mysqli_error($DB))) {
+            return [];
+        } else if (!empty($result)) {
+
+            $hosts = [];
+            for ($i = 1; $row = $result->fetch_assoc(); $i++) {
+                $newobj = new stdClass();
+                foreach ($row as $key => $object) {
+                    $newobj->$key = $row["$key"];
+                }
+                $newobj->arr_databases = [];
+                $hosts[] = $newobj;
+            }
+
+            return $hosts;
+        }
     }
 
     public function get_records($query)
@@ -141,13 +165,9 @@ class database
 
         $result = mysqli_query($DB, $query);
         if (!empty(mysqli_error($DB))) {
-            echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">';
-            echo '<div class="container" style="display: flex; justify-content: center; align-items: center; height: 100vh">
-                <div class="alert alert-danger" role="alert"> ' . mysqli_error($DB) . ' </div>
-              </div>';
-            die();
+            return ['success' => false, 'output' => mysqli_error($DB)];
         } else {
-            return $DB->insert_id;
+            return ['success' => true, 'output' => $DB->insert_id];
         }
     }
 

@@ -6,15 +6,20 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import connectServer from "../helpers/connectServer.js";
 import Swal from "sweetalert2";
 import DatabaseList from "./DatabaseList.jsx";
+import {useUserContext} from "../contexts/UserContext.jsx";
 
 function ServerList({servers, setServers, setStatus}) {
 
+    //Contexto del usuario
+    let {user, setUser} = useUserContext();
+
     // -- Declaracion de los Efectos
     useEffect(() => {
-        getServers()
+        getServers(user.id)
             .then(servers => {
                 if (typeof servers !== 'undefined' && servers.success) {
-                    if (servers.output.length) setServers(JSON.parse(servers.output));
+                    console.log(servers.output);
+                    if (servers.output.length) setServers(servers.output);
                 } else {
                     Swal.fire({
                         icon: 'error',
@@ -56,15 +61,18 @@ function ServerList({servers, setServers, setStatus}) {
                 let serverConnect = null;
 
                 if (result.success) {
+
                     // Actualizar el objeto con id seleccionada
                     const serversCopyArray = servers.map(server => {
-                        if (server.id === parseInt(element.dataset.id)) {
+                        if (server.id === element.dataset.id) {
                             serverConnect = server.host;
-                            return {...server, databases: result.output.databases, active: true };
+                            return {...server, arr_databases: result.output.databases, active: true };
                         } else {
                             return {...server, active: false};
                         }
                     });
+
+                    console.log(serversCopyArray);
 
                     // Actualizar el estado de React con el nuevo array modificado
                     setServers(serversCopyArray);
@@ -113,8 +121,9 @@ function ServerList({servers, setServers, setStatus}) {
             <div className="col-p2">
                 <ul id='servers' className="list-group bg-dark">
                     {servers.map((server) => {
+                            server.active = server.active === true;
                             return (
-                                <li key={server.token} onDoubleClick={handleConnect} className={`${server.active ? 'connected' : 'd-block'}`}>
+                                <li key={server.token} onDoubleClick={handleConnect} className={`${ server.active ? 'connected' : 'd-block'}`}>
                                     <a className='server conection prevent-select px-3 py-1 w-100 d-inline-block'
                                        data-server={server.token} data-id={server.id} data-name={server.host}>
                                         <img id={server.token + '_' + server.host} src={server.active ? mysql_connect : mysql}
@@ -133,7 +142,7 @@ function ServerList({servers, setServers, setStatus}) {
 
                                     <ul id={`'table_${server.id}_${server.host}`} data-id={server.id} className={`list-group bg-dark ${server.active ? 'd-block' : 'd-none'}`}>
                                         {
-                                            server.databases.map((database, order) => {
+                                            server.arr_databases.map((database, order) => {
                                                 return <DatabaseList key={database.name} database={database} order={order} servers={servers} setServers={setServers} />
                                             })
                                         }

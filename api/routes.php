@@ -2,7 +2,7 @@
 
 require_once(__DIR__. '/src/LoginAPI.php');
 require_once(__DIR__. '/src/API.php');
-include_once __DIR__ . '/lib/database.php';
+include_once __DIR__ . '/lib/MariaDB.php';
 
 global $CFG;
 
@@ -16,7 +16,7 @@ function getRoute($url) {
 
     switch($url){
         case $CFG->wwwroot . '/login':
-            echo $LoginAPI->get_user_by_username();
+            echo $LoginAPI->check_user_login();
             break;
         case $CFG->wwwroot . '/register':
             echo $LoginAPI->create_user();

@@ -5,36 +5,30 @@ header('Content-Type: application/json');
 class LoginAPI
 {
 
-    public function get_user_by_username()
+    public function check_user_login()
     {
+
+        global $DB;
+
         if (!empty($_POST) && (!isset($_POST['username']) || !empty($_POST['username'])) && (!isset($_POST['password']) || !empty($_POST['password']))) {
 
-            $users = json_decode(@file_get_contents(__DIR__ . '/../json/users.json'));
+            $username = $_POST['username'];
+
+            $user = $DB->get_record("SELECT * FROM user WHERE username = '$username'");
 
             $user_login = null;
-            $error = null;
-
-            if (empty($users)) {
-                $users = [];
-                //Añadimos al archivo
-                $db = fopen(__DIR__ . '/../json/users.json', "w") or die("Error 405!");
-                fwrite($db, json_encode($users, JSON_PRETTY_PRINT));
-                fclose($db);
-            } else {
-
-                foreach ($users as $user){
-                    if($user->username === $_POST['username']){
-                        if($user->password === $_POST['password']) $user_login = $user;
-                        else $error = 'Contraseña incorrecta';
-                    } else $error = 'Usuario no valido';
+            if(!empty($user)){
+                if($user->password === $_POST['password']){
+                    $user_login = $user;
                 }
-            }
+                else $error = 'Contraseña incorrecta';
+            } else $error = 'Usuario no válido';
 
             header("HTTP/1.1 200 OK");
             if(empty($user_login) && !empty($error)){
                 return json_encode(['success' => false, 'error' => 4, 'output' => $error]);
             }
-            return json_encode(['success' => true, 'error' => 0, 'output' => $users]);
+            return json_encode(['success' => true, 'error' => 0, 'output' => $user_login]);
 
         } else {
             header("HTTP/1.1 400 Bad Request");
@@ -45,47 +39,27 @@ class LoginAPI
     public function create_user()
     {
 
+        global $DB;
+
         if (!empty($_POST) && (!isset($_POST['username']) || !empty($_POST['username'])) && (!isset($_POST['password']) || !empty($_POST['password']))) {
 
-            header("Content-type:application/json");
+            $username = $_POST['username'];
+            $user = $DB->get_record("SELECT * FROM user WHERE username = '$username'");
 
-            $ip = $_SERVER['REMOTE_ADDR'];
-            $json = @file_get_contents(__DIR__ . '/../json/users.json');
-            $users = json_decode($json);
-
-            foreach ($users as $user){
-                if($user->username=== $_POST['username']){
-                    header("HTTP/1.1 200 OK");
-                    return json_encode(['success' => false, 'error' => 3, 'output' => 'Este usuario ya existe']);
-                }
+            if(!empty($user)){
+                header("HTTP/1.1 200 OK");
+                return json_encode(['success' => false, 'error' => 3, 'output' => 'Este usuario ya existe']);
             }
 
-            $id = 0;
-            if (!empty($users)) {
-                $id = end($users)->id;
-            }
-
-            $id++;
-
-            $user = array(
-                "id" => $id,
-                "username" => $_POST['username'],
-                "password" => $_POST['password'],
-                "rol" => ['user'],
-                "ip" => $ip,
-                "visible" => "yes"
-            );
-
-            !empty($users) ? array_push($users, $user) : $json = [$user];
-
-            $db = fopen(__DIR__ . '/../json/users.json', "w") or die("Error 405!");
-
-            fwrite($db, json_encode($users, JSON_PRETTY_PRINT));
-            fclose($db);
+            $new_user = $DB->insert("INSERT INTO `user` (username, password, photo, rol, visible) VALUES ('". $_POST['username'] ."', '". $_POST['password'] ."', 'default.png', '[\"user\"]', 1);");
 
             header("HTTP/1.1 200 OK");
-            return json_encode(['success' => true, 'error' => 0, 'output' => $user]);
-
+            if($new_user['success']){
+                $user = $DB->get_record("SELECT * FROM user WHERE id = " . $new_user['output']);
+                return json_encode(['success' => true, 'error' => 0, 'output' => $user]);
+            } else {
+                return json_encode(['success' => false, 'error' => 5, 'output' => $new_user['output']]);
+            }
         } else {
             header("HTTP/1.1 400 Bad Request");
             return json_encode(['success' => false, 'error' => 2, 'output' => 'Faltan parametros']);

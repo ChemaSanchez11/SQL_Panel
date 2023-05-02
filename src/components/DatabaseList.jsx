@@ -31,8 +31,6 @@ function DatabaseList({database, order, servers, setServers}) {
         getTables({database})
             .then(result => {
 
-                console.log(result);
-
                 element.removeChild(loadingDiv);
 
                 let serverConnect = null;
@@ -45,14 +43,14 @@ function DatabaseList({database, order, servers, setServers}) {
                             serverConnect = server.host;
                             //server.databases[order]
 
-                            const databasesCopyArray = server.databases.map(database => {
+                            const databasesCopyArray = server.arr_databases.map(database => {
                                 if (database.order === parseInt(order)) {
                                     return {...database, tables: result.output.tables };
                                 } else {
                                     return database;
                                 }
                             });
-                            return {...server, databases: databasesCopyArray, active: true };
+                            return {...server, arr_databases: databasesCopyArray, active: true };
                         } else {
                             return {...server, active: false};
                         }

@@ -17,7 +17,7 @@ if (is_session_started() && isset($_SESSION['server']) && !empty($_SESSION['serv
 //    $CFG->dbname = 'mysql_panel';
 //    $CFG->port = $connect[4];
 //    var_dump("INICIO");
-    $database = new database($connect[1], $connect[2], $connect[3], $connect[4]);
+    $database = new mariaDB($connect[1], $connect[2], $connect[3], $connect[4]);
 
 }
 
@@ -30,7 +30,7 @@ $CFG->port = '3306';
 
 $CFG->wwwroot = 'http://localhost/SQL_Panel/__MySQL_Panel_OLD';
 
-$DB = new database();
+$DB = new mariaDB();
 
 $mac_addres = GetMAC();
 
