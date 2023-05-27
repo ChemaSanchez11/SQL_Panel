@@ -6,12 +6,16 @@ import done from '/icons/done.png';
 import error from '/icons/error.png';
 import info from '/icons/info.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {useUserContext} from "../contexts/UserContext.jsx";
+import {useUserContext} from "../contexts/PanelContext.jsx";
 
-function Nav({status}) {
+function Nav({status, setMain}) {
 
     //Contexto del usuario
-    let {user, setUser} = useUserContext();
+    let {user, setUser} = useUserContext().userContext;
+
+    function handleQuery(){
+        setMain({type: 'query'});
+    }
 
     return (
         <nav className="navbar navbar-dark justify-content-start">
@@ -25,7 +29,7 @@ function Nav({status}) {
                 </a>
             </div>
 
-            <a className="navbar-brand ms-2" href="#">
+            <a className="navbar-brand ms-2" href="#" onClick={handleQuery}>
                 <img src={query} width="45" height="45" alt=""/>
             </a>
 

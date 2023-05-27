@@ -98,10 +98,64 @@ class API
 //                    array_push($array_tables, $table->table);
 //                }
 
-                $tables = $DB->show_tables($_POST['mariaDB']);
+                $tables = $DB->show_tables($_POST['database']);
 
                 header("HTTP/1.1 200 OK");
-                return json_encode(['success' => true, 'error' => 0, 'output' => ['mariaDB' => $_POST['mariaDB'], 'tables' => $tables]]);
+                return json_encode(['success' => true, 'error' => 0, 'output' => ['database' => $_POST['database'], 'tables' => $tables]]);
+            } else {
+                header("HTTP/1.1 400 Bad Request");
+                return json_encode(['success' => false, 'error' => 6, 'output' => $DB->error]);
+            }
+        }
+    }
+
+    public function get_rows()
+    {
+
+        if (!empty($_POST)) {
+
+            $server = $_SESSION['server'];
+
+            $DB = new ConnectionPool('mysql:host='. $server[1] .';', $server[2],  $server[3]);
+
+            //$enlace = null;
+            if ($DB->status) {
+
+//                $array_tables = [];
+//
+//                foreach ($DB->show_tables($_POST['mariaDB']) as $table) {
+//                    array_push($array_tables, $table->table);
+//                }
+
+                $tables = $DB->get_rows($_POST['table'], $_POST['database']);
+
+                header("HTTP/1.1 200 OK");
+                return json_encode(['success' => true, 'error' => 0, 'output' => ['table' => $_POST['table'], 'rows' => $tables]]);
+            } else {
+                header("HTTP/1.1 400 Bad Request");
+                return json_encode(['success' => false, 'error' => 6, 'output' => $DB->error]);
+            }
+        }
+    }
+
+    public function get_records()
+    {
+
+        if (!empty($_POST)) {
+
+            $server = $_SESSION['server'];
+
+            $dbname = $_POST['table'];
+
+            $DB = new ConnectionPool('mysql:host='. $server[1] .';dbname=' . $dbname, $server[2],  $server[3]);
+
+            if ($DB->status) {
+
+
+                $tables = $DB->get_records($_POST['value']);
+
+                header("HTTP/1.1 200 OK");
+                return json_encode(['success' => true, 'error' => 0, 'output' => ['table' => $_POST['table'], 'rows' => $tables]]);
             } else {
                 header("HTTP/1.1 400 Bad Request");
                 return json_encode(['success' => false, 'error' => 6, 'output' => $DB->error]);

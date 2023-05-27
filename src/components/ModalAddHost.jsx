@@ -1,12 +1,12 @@
 import add_host from '/icons/add-host.png';
 import {useForm} from "react-hook-form";
 import addServer from "../helpers/addServer.js";
-import {useUserContext} from "../contexts/UserContext.jsx";
+import {useUserContext} from "../contexts/PanelContext.jsx";
 
 function ModalAddHost({ servers , setServers }) {
 
     //Contexto del usuario
-    let {user, setUser} = useUserContext();
+    let {user, setUser} = useUserContext().userContext;
 
     const { register, handleSubmit, formState: { errors }, watch } = useForm({
         defaultValues: {

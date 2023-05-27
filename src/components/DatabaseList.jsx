@@ -1,11 +1,15 @@
-import React from "react";
+import React, {useContext} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import databasePNG from '/icons/database.png'
+import tablePNG from '/icons/table.png'
 import getTables from "../helpers/getTables.js";
 import Swal from "sweetalert2";
+import TableList from "./TableList.jsx";
+import {PanelContext} from "../contexts/PanelContext.jsx";
 
-function DatabaseList({database, order, servers, setServers}) {
+function DatabaseList({database, order, servers, setServers, setMain}) {
 
+    let { current, setCurrent } = useContext(PanelContext).currentContext; // Usa el hook useContext para acceder al contexto
 
     async function handleGetTables(event) {
         event.preventDefault();
@@ -39,13 +43,20 @@ function DatabaseList({database, order, servers, setServers}) {
 
                     // Actualizar el objeto con id seleccionada
                     const serversCopyArray = servers.map(server => {
-                        if (server.id === parseInt(event.target.closest('ul').dataset.id)) {
+
+                        if (parseInt(server.id) === parseInt(event.target.closest('ul').dataset.id)) {
                             serverConnect = server.host;
+
+                            //Seteamos el contexto con la database
+                            setCurrent({server: server.host, database});
+
                             //server.databases[order]
 
+
                             const databasesCopyArray = server.arr_databases.map(database => {
-                                if (database.order === parseInt(order)) {
-                                    return {...database, tables: result.output.tables };
+
+                                if (database.order == parseInt(order)) {
+                                    return {...database, tables: Object.values(result.output.tables) };
                                 } else {
                                     return database;
                                 }
@@ -55,6 +66,7 @@ function DatabaseList({database, order, servers, setServers}) {
                             return {...server, active: false};
                         }
                     });
+
 
                     // Actualizar el estado de React con el nuevo array modificado
                     setServers(serversCopyArray);
@@ -73,7 +85,7 @@ function DatabaseList({database, order, servers, setServers}) {
 
                     Toast.fire({
                         icon: 'success',
-                        title: `Conexion establecida con ${serverConnect}`
+                        title: `Conexion establecida con AQUI`
                     })
 
                 } else {
@@ -94,16 +106,25 @@ function DatabaseList({database, order, servers, setServers}) {
     }
 
     return (
-        <li key={database.name} className='ms-3' onDoubleClick={handleGetTables}>
-            {console.log(database)}
-            <a className='conection prevent-select px-3 py-1 w-100 d-inline-block' data-database={database.name} data-order={order}>
-                <img src={databasePNG}
-                     width='24' height='24' alt='' className='align-middle'/>
-                <span className='align-middle'
-                      style={{fontSize: "14px"}}> {`${database.name}`}</span>
-            </a>
+        <>
+            <li key={database.name} className='ms-3' onDoubleClick={handleGetTables}>
 
-        </li>
+                <a className='conection prevent-select px-3 py-1 w-100 d-inline-block' data-database={database.name} data-order={order}>
+                    <img src={databasePNG}
+                         width='24' height='24' alt='' className='align-middle'/>
+                    <span className='align-middle'
+                          style={{fontSize: "14px"}}> {`${database.name}`}</span>
+
+                </a>
+            </li>
+            <ul className='table-list list-group d-block ms-5'>
+                {
+                    database.tables.map((table) => {
+                        return <TableList key={table.table} table={table} setMain={setMain}></TableList>
+                    })
+                }
+            </ul>
+        </>
     )
 }
 

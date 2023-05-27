@@ -4,7 +4,7 @@ import userLogin from "../helpers/userLogin.js";
 import userRegister from "../helpers/userRegister.js";
 import Swal from "sweetalert2";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useUserContext } from "../contexts/UserContext.jsx";
+import { useUserContext } from "../contexts/PanelContext.jsx";
 import { useNavigate } from 'react-router-dom';
 
 //TODO: TERMINAR REGISTER
@@ -15,7 +15,7 @@ function Login() {
     const navigate = useNavigate();
 
     //Contexto del usuario
-    let {user, setUser} = useUserContext();
+    let {user, setUser} = useUserContext().userContext;
 
     document.body.classList.add('bg-gradient');
 

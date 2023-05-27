@@ -33,6 +33,12 @@ function getRoute($url) {
         case $CFG->wwwroot . '/get_tables':
             echo $API->get_tables();
             break;
+        case $CFG->wwwroot . '/get_rows':
+            echo $API->get_rows();
+            break;
+        case $CFG->wwwroot . '/get_records':
+            echo $API->get_records();
+            break;
         default:
             header("HTTP/1.1 405 Service Not Found");
             echo json_encode(['success' => false, 'error' => 1, 'output' => 'Servicio No Encontrado']);

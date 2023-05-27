@@ -25,7 +25,7 @@ class ConnectionPool
 
     public function get_connection()
     {
-        return (Object) ['status' => $this->status, 'error' => $this->error];
+        return (object)['status' => $this->status, 'error' => $this->error];
     }
 
     public function get_databases()
@@ -66,6 +66,62 @@ class ConnectionPool
             $std[] = $newobj;
         }
 
-        return (Object) $std;
+        return (object)$std;
+    }
+
+    public function get_rows($table, $database)
+    {
+
+        $PDO = $this->db;
+        $result = $PDO->prepare("SELECT * FROM `$database`.`$table` LIMIT 0,1000");
+        $result->execute();
+        $rows = [];
+
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $rows[] = $row;
+        }
+
+        if (empty($rows)) {
+
+            $result = $PDO->prepare("
+                SELECT
+                    COLUMN_NAME 
+                FROM
+                    `information_schema`.`COLUMNS` 
+                WHERE
+                    `TABLE_SCHEMA` = '$database' 
+                    AND `TABLE_NAME` = '$table'");
+            $result->execute();
+            $rows = [];
+
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $field = $row['COLUMN_NAME'];
+//                $rows[0] = [$field => null];
+                $rows = array_merge($rows, [$field => null]);
+            }
+
+            return (object) [$rows];
+        }
+
+        return (object)$rows;
+    }
+
+    public function get_records($query)
+    {
+
+        $PDO = $this->db;
+        $result = $PDO->prepare($query);
+        $result->execute();
+        $std = [];
+
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $newobj = new stdClass();
+            foreach ($row as $key => $value) {
+                $newobj->{$key} = $value;
+            }
+            $std[] = $newobj;
+        }
+
+        return (object)$std;
     }
 }

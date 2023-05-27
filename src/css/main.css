@@ -151,6 +151,59 @@ button.close {
   cursor: pointer;
 }
 
+.btn-danger {
+  background-color: #ec4b4a !important;
+}
+
+.btn-current {
+  height: 40px;
+}
+
+.current-ico {
+  width: 22px;
+}
+
+.run-ico {
+  width: 2.2rem;
+  height: 2.2rem;
+}
+
+.database-ico {
+  width: 18px;
+}
+
+.table-list {
+  list-style: none !important;
+}
+
+.table-stripped {
+  height: fit-content;
+}
+
+th, tr, td {
+  max-width: fit-content;
+}
+
+pre {
+  margin-left: 1rem;
+}
+
+.hljs-attr {
+  color: #fd2464;
+}
+
+.hljs-string {
+  color: #5db956;
+}
+
+.ace-twilight {
+  background-color: #343a40 !important;
+}
+
+.ace_keyword {
+  color: #ebb916 !important;
+}
+
 .login-container {
   position: absolute;
   top: 50%;
@@ -172,6 +225,18 @@ button.close {
   box-sizing: border-box;
   border-radius: 16px;
   box-shadow: inset 0 0 1px #272727;
+}
+.login-form button {
+  margin-top: 1rem;
+  border-radius: 5px !important;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+.login-form button:hover {
+  color: #5cb85c;
+  border: 1px solid #5cb85c;
+  box-shadow: 0 0 5px rgba(0, 255, 0, 0.3), 0 0 10px rgba(0, 255, 0, 0.2), 0 0 15px rgba(0, 255, 0, 0.1), 0 2px 0 black;
 }
 
 .text {
@@ -240,19 +305,6 @@ form button {
   background: linear-gradient(#333, #222);
 }
 
-button {
-  margin-top: 1rem;
-  border-radius: 5px !important;
-  font-weight: 600;
-  letter-spacing: 1px;
-  cursor: pointer;
-}
-button:hover {
-  color: #5cb85c;
-  border: 1px solid #5cb85c;
-  box-shadow: 0 0 5px rgba(0, 255, 0, 0.3), 0 0 10px rgba(0, 255, 0, 0.2), 0 0 15px rgba(0, 255, 0, 0.1), 0 2px 0 black;
-}
-
 .link {
   margin-top: 25px;
   color: #868686;
@@ -313,7 +365,7 @@ button:hover {
   margin-top: 1.6em;
   text-align: center;
   font-size: 80%;
-  color: hsla(0deg, 0%, 0%, 0.4);
+  color: hsla(0, 0%, 0%, 0.4);
 }
 
 .spinner .spinner-circle {

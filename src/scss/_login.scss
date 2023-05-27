@@ -19,6 +19,24 @@
   box-sizing: border-box;
   border-radius: 16px;
   box-shadow: inset 0 0 1px #272727;
+
+  button {
+    margin-top: 1rem;
+    border-radius: 5px!important;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+
+    &:hover {
+      color: $color-success;
+      border: 1px solid $color-success;
+      box-shadow: 0 0 5px rgba(0,255,0,.3),
+      0 0 10px rgba(0,255,0,.2),
+      0 0 15px rgba(0,255,0,.1),
+      0 2px 0 black;
+    }
+  }
+
 }
 .text {
   font-size: 30px;
@@ -96,24 +114,6 @@ form {
 
 
 }
-
-button {
-  margin-top: 1rem;
-  border-radius: 5px!important;
-  font-weight: 600;
-  letter-spacing: 1px;
-  cursor: pointer;
-
-  &:hover {
-    color: $color-success;
-    border: 1px solid $color-success;
-    box-shadow: 0 0 5px rgba(0,255,0,.3),
-    0 0 10px rgba(0,255,0,.2),
-    0 0 15px rgba(0,255,0,.1),
-    0 2px 0 black;
-  }
-}
-
 
 .link {
   margin-top: 25px;

@@ -156,5 +156,60 @@ button.close {
 
 }
 
+.btn-danger {
+  background-color: #ec4b4a !important;
+}
+
+.btn-current{
+  height: 40px;
+}
+
+.current-ico {
+  width: 22px;
+}
+.run-ico {
+  width: 2.2rem;
+  height: 2.2rem;
+}
+
+.database-ico {
+  width: 18px;
+}
+
+.table-list {
+  list-style: none !important;
+}
+
+.table-stripped {
+  height: fit-content;
+}
+
+th, tr, td {
+  max-width: fit-content;
+}
+
+//json
+
+pre {
+  margin-left: 1rem;
+}
+
+.hljs-attr {
+  color: #fd2464;
+}
+
+.hljs-string {
+  color: #5db956;
+}
+
+//sql
+.ace-twilight {
+  background-color: #343a40 !important;
+}
+
+.ace_keyword {
+  color: #ebb916 !important;
+}
+
 @import "login";
 @import "loading-spinner";

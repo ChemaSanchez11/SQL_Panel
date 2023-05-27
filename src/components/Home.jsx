@@ -6,27 +6,27 @@ import Nav from "./Nav.jsx";
 import ServersList from "./ServersList.jsx";
 import ModalAddHost from "./ModalAddHost";
 import ModalInfo from "./ModalInfo.jsx";
-import {UserContext} from "../contexts/UserContext.jsx";
+import Main from "./Main.jsx";
 
 function Home() {
 
-
-
     const [servers, setServers] = useState([]);
     const [status, setStatus] = useState();
+    const [main, setMain] = useState({});
 
     document.body.classList.add('bg-dark');
     document.body.classList.remove('bg-gradient');
 
     return (
-        <React.Fragment>
-            <Nav status={status}/>
-            <div className="bg-dark d-flex">
-                <ServersList servers={servers} setServers={setServers} setStatus={setStatus}/>
+        <>
+            <Nav status={status} setMain={setMain}/>
+            <div className="row w-100">
+                <ServersList servers={servers} setServers={setServers} setStatus={setStatus} setMain={setMain}/>
+                <Main main={main}/>
             </div>
             <ModalAddHost servers={servers} setServers={setServers}/>
             <ModalInfo/>
-        </React.Fragment>
+        </>
     );
 }
 
