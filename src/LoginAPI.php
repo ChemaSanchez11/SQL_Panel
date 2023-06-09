@@ -65,4 +65,25 @@ class LoginAPI
             return json_encode(['success' => false, 'error' => 2, 'output' => 'Faltan parametros']);
         }
     }
+
+    public function edit_user()
+    {
+        global $DB;
+
+        if (!empty($_POST)) {
+            $id = $_POST['id'];
+            $username = $_POST['user_username'];
+            $password = $_POST['user_new_password'];
+
+            $DB->execute("UPDATE user SET username = '$username', password = '$password' WHERE id = $id;");
+
+            header('Content-type:application/json');
+            header("HTTP/1.1 200 OK");
+            return json_encode(['success' => true, 'error' => 0, 'output' => $DB->get_conections("SELECT * FROM user WHERE id = $id")]);
+        } else {
+            header("HTTP/1.1 400 Bad Request");
+            header('Content-type:application/json');
+            return json_encode(['success' => false, 'error' => 2, 'output' => 'Faltan parametros']);
+        }
+    }
 }

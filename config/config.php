@@ -9,6 +9,6 @@ unset($CFG, $DB);
 global $CFG, $DB;
 
 $CFG = new stdClass();
-$CFG->wwwroot = '/SQL_Panel/api';
+$CFG->wwwroot = '/sql_panel/external_api';
 
-$DB = new MariaDB('localhost', 'root', '', '3306');
+$DB = new MariaDB('localhost', 'root', '', '33306');

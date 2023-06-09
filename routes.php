@@ -21,23 +21,17 @@ function getRoute($url) {
         case $CFG->wwwroot . '/register':
             echo $LoginAPI->create_user();
             break;
+        case $CFG->wwwroot . '/edit_user':
+            echo $LoginAPI->edit_user();
+            break;
         case $CFG->wwwroot . '/get_servers':
             echo $API->get_servers();
             break;
         case $CFG->wwwroot . '/add_server':
             echo $API->add_server();
             break;
-        case $CFG->wwwroot . '/connect':
-            echo $API->connect();
-            break;
-        case $CFG->wwwroot . '/get_tables':
-            echo $API->get_tables();
-            break;
-        case $CFG->wwwroot . '/get_rows':
-            echo $API->get_rows();
-            break;
-        case $CFG->wwwroot . '/get_records':
-            echo $API->get_records();
+        case $CFG->wwwroot . '/edit_servers':
+            echo $API->edit_servers();
             break;
         default:
             header("HTTP/1.1 405 Service Not Found");
