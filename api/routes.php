@@ -1,8 +1,6 @@
 <?php
 
-require_once(__DIR__. '/src/LoginAPI.php');
 require_once(__DIR__. '/src/API.php');
-include_once __DIR__ . '/lib/MariaDB.php';
 
 global $CFG;
 
@@ -10,23 +8,9 @@ global $CFG;
 function getRoute($url) {
 
     global $CFG;
-
-    $LoginAPI = new LoginAPI();
     $API = new API();
 
     switch($url){
-        case $CFG->wwwroot . '/login':
-            echo $LoginAPI->check_user_login();
-            break;
-        case $CFG->wwwroot . '/register':
-            echo $LoginAPI->create_user();
-            break;
-        case $CFG->wwwroot . '/get_servers':
-            echo $API->get_servers();
-            break;
-        case $CFG->wwwroot . '/add_server':
-            echo $API->add_server();
-            break;
         case $CFG->wwwroot . '/connect':
             echo $API->connect();
             break;
@@ -38,6 +22,9 @@ function getRoute($url) {
             break;
         case $CFG->wwwroot . '/get_records':
             echo $API->get_records();
+            break;
+        case $CFG->wwwroot . '/delete_rows':
+            echo $API->delete_rows();
             break;
         default:
             header("HTTP/1.1 405 Service Not Found");

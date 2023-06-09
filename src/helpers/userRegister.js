@@ -3,7 +3,7 @@ async function userRegister(data) {
     //Codificamos la contraseña en base64
     data.password = btoa(data.password);
 
-    const url = '/api/register';
+    const url = '/external_api/register';
     const options = {
         method: 'POST',
         headers: {

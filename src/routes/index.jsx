@@ -1,12 +1,11 @@
-import React, { useContext } from 'react';
+import React, {useContext, useEffect} from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import Error from '../components/Error.jsx';
 import Home from '../components/Home.jsx';
 import Login from '../components/Login.jsx';
-import { PanelContext } from '../contexts/PanelContext.jsx';
-
+import { usePanelContext } from '../contexts/PanelContext.jsx';
 const PrivateRoute = ({ children }) => {
-    const { user, setUser } = useContext(PanelContext).userContext; // Usa el hook useContext para acceder al contexto
+    const { user, setUser } = usePanelContext().userContext; // Usa el hook useContext para acceder al contexto
 
     // Utiliza el valor de user del contexto para determinar si el usuario ha iniciado sesión o no
     return user !== false ? children : <Navigate to="/login" />; // Redirige a "/login" si no ha iniciado sesión

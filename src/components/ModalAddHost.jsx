@@ -1,12 +1,12 @@
 import add_host from '/icons/add-host.png';
 import {useForm} from "react-hook-form";
 import addServer from "../helpers/addServer.js";
-import {useUserContext} from "../contexts/PanelContext.jsx";
+import {usePanelContext} from "../contexts/PanelContext.jsx";
 
 function ModalAddHost({ servers , setServers }) {
 
     //Contexto del usuario
-    let {user, setUser} = useUserContext().userContext;
+    let {user, setUser} = usePanelContext().userContext;
 
     const { register, handleSubmit, formState: { errors }, watch } = useForm({
         defaultValues: {
@@ -43,7 +43,7 @@ function ModalAddHost({ servers , setServers }) {
                         </button>
                     </div>
                     <div className="modal-body">
-                        <form id="new_server" onSubmit={handleSubmit(saveServer)} action="lib/services/servers.php" method="post">
+                        <form id="new_server" onSubmit={handleSubmit(saveServer)} method="post">
                             <div className="form-group">
                                 <label htmlFor="new_server_host">Servidor</label>
                                 <input type="text"
@@ -89,59 +89,12 @@ function ModalAddHost({ servers , setServers }) {
                                     El puerto por defecto de los servidores SQL es el 3306.
                                 </small>
                             </div>
-                            <button type="submit" className="btn btn-success d-flex mt-1 ms-auto" data-bs-dismiss="modal">Guardar</button>
+                            <input type="submit" className="btn btn-success d-flex mt-1 ms-auto" data-bs-dismiss="modal" value="Guardar"/>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-
-
-        // <div className="modal fade" id="modal-addhost" tabIndex="-1" role="dialog" aria-labelledby="modal-addhost"
-        //      aria-hidden="true">
-        //     <div className="modal-dialog modal-dialog-centered" role="document">
-        //         <div className="modal-content">
-        //             <div className="modal-header my-auto">
-        //                 <img src={add_host} width="50" height="45" alt=""/>
-        //                     <h3 className="modal-title ml-2" id="exampleModalLongTitle">Informacion</h3>
-        //                     <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-        //                         <span aria-hidden="true">&times;</span>
-        //                     </button>
-        //             </div>
-        //             <div className="modal-body">
-        //                 <form id="new_server" action="lib/services/servers.php" method="post">
-        //                     <div className="form-group">
-        //                         <label htmlFor="new_server_host">Host</label>
-        //                         <input type="text" className="form-control" id="new_server_host" name="new_server_host"
-        //                                placeholder="localhost"/>
-        //                     </div>
-        //                     <div className="form-group">
-        //                         <label htmlFor="new_server_user">Host</label>
-        //                         <input type="text" className="form-control" id="new_server_user" name="new_server_user"
-        //                                placeholder="root"/>
-        //                     </div>
-        //                     <div className="form-group">
-        //                         <label htmlFor="new_server_pass">Host</label>
-        //                         <input type="password" className="form-control" id="new_server_pass"
-        //                                name="new_server_pass"/>
-        //                     </div>
-        //                     <div className="form-group">
-        //                         <label htmlFor="new_server_port">Host</label>
-        //                         <input type="email" className="form-control" id="new_server_port" name="new_server_port"
-        //                                aria-describedby="new_server_port" placeholder="3306"/>
-        //                             <small id="emailHelp" className="form-text text-muted">
-        //                                 El puerto por defecto de los servidores SQL es el 3306.
-        //                             </small>
-        //                     </div>
-        //                     <button type="submit" className="btn btn-primary">Enviar</button>
-        //                 </form>
-        //             </div>
-        //             <div className="modal-footer">
-        //                 <button type="button" className="btn btn-success" data-dismiss="modal">Guardar</button>
-        //             </div>
-        //         </div>
-        //     </div>
-        // </div>
     )
 }
 

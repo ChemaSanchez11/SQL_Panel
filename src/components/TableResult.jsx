@@ -21,6 +21,7 @@ const TableResult = ({ main }) => {
         return formattedRow;
     });
 
+
     async function expandJson() {
         await new Promise(resolve => setTimeout(resolve, 100));
         hljs.highlightAll();
@@ -76,7 +77,6 @@ const TableResult = ({ main }) => {
             paginationRowsPerPageOptions={[20, 50, 100]}
             striped={true}
             responsive={true}
-            selectableRows={true}
             highlightOnHover={true}
             expandableRows={true}
             expandableRowsComponent={ExpandedComponent}

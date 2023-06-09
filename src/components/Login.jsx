@@ -4,7 +4,7 @@ import userLogin from "../helpers/userLogin.js";
 import userRegister from "../helpers/userRegister.js";
 import Swal from "sweetalert2";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useUserContext } from "../contexts/PanelContext.jsx";
+import { usePanelContext } from "../contexts/PanelContext.jsx";
 import { useNavigate } from 'react-router-dom';
 
 //TODO: TERMINAR REGISTER
@@ -15,7 +15,7 @@ function Login() {
     const navigate = useNavigate();
 
     //Contexto del usuario
-    let {user, setUser} = useUserContext().userContext;
+    let {user, setUser} = usePanelContext().userContext;
 
     document.body.classList.add('bg-gradient');
 
@@ -68,7 +68,6 @@ function Login() {
             userRegister(data)
                 .then(result => {
                     if (typeof result !== 'undefined' && result.success) {
-                        console.log(result);
                     } else if (result.error === 3) {
 
                         Toast.fire({
@@ -105,6 +104,8 @@ function Login() {
     //Actualizamos el usuario y el estado se actualizacion de usuario
     const updateUserAndNavigate = (newUserData) => {
         setUser(newUserData);
+        sessionStorage.clear();
+        sessionStorage.setItem('user', JSON.stringify(newUserData));
         setUserUpdated(true);
     };
 

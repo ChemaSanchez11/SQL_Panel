@@ -1,5 +1,5 @@
 async function addServer(data) {
-    const url = '/api/add_server';
+    const url = '/external_api/add_server';
     const options = {
         method: 'POST',
         headers: {

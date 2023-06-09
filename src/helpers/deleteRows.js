@@ -1,11 +1,11 @@
-async function getServers(user_id) {
-    const url = '/external_api/get_servers';
+async function deleteRows(database, table, value) {
+    const url = '/api/delete_rows';
     const options = {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: new URLSearchParams({user_id: user_id}) //para enviar los datos con urlencoded
+        body: new URLSearchParams({database: database, table: table, value: value}) //para enviar los datos con urlencoded
     };
 
     try {
@@ -16,4 +16,4 @@ async function getServers(user_id) {
     }
 }
 
-export default getServers;
+export default deleteRows;

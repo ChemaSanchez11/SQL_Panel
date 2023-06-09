@@ -1,11 +1,12 @@
-async function getServers(user_id) {
-    const url = '/external_api/get_servers';
+async function editUser(data) {
+
+    const url = '/external_api/edit_user';
     const options = {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: new URLSearchParams({user_id: user_id}) //para enviar los datos con urlencoded
+        body: new URLSearchParams(data) //para enviar los datos con urlencoded
     };
 
     try {
@@ -16,4 +17,4 @@ async function getServers(user_id) {
     }
 }
 
-export default getServers;
+export default editUser;

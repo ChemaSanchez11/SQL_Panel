@@ -188,11 +188,10 @@ pre {
   margin-left: 1rem;
 }
 
-.hljs-attr {
+.language-json .hljs-attr {
   color: #fd2464;
 }
-
-.hljs-string {
+.language-json .hljs-string {
   color: #5db956;
 }
 
@@ -200,8 +199,52 @@ pre {
   background-color: #343a40 !important;
 }
 
-.ace_keyword {
+.ace_keyword, .hljs-keyword {
   color: #ebb916 !important;
+}
+
+.language-sql .hljs-string {
+  color: #ff564b !important;
+}
+.language-sql .hljs-number {
+  color: #aaff6a !important;
+}
+
+.table-dark {
+  margin-top: 0.5rem;
+  --bs-table-bg: transparent;
+}
+
+.context-menu {
+  position: absolute;
+  z-index: 9999;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 8px;
+  width: 200px;
+}
+
+.context-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.context-menu ul li {
+  cursor: pointer;
+  padding: 4px;
+}
+
+.context-menu ul li:hover {
+  background-color: #f5f5f5;
+}
+
+.Toastify__toast-container {
+  width: auto !important;
+}
+
+.Toastify__toast-container--top-center {
+  left: 52% !important;
 }
 
 .login-container {

@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import databasePNG from '/icons/database.png'
 import tablePNG from '/icons/table.png'
@@ -6,12 +6,35 @@ import getTables from "../helpers/getTables.js";
 import Swal from "sweetalert2";
 import TableList from "./TableList.jsx";
 import {PanelContext} from "../contexts/PanelContext.jsx";
+import {useNavigate} from "react-router-dom";
+
+const ContextMenu = ({x, y, table, setClose, setShowContextMenu, onClose}) => {
+
+    const navigate = useNavigate();
+
+    function handleClose(event) {
+        setClose(true)
+        setShowContextMenu(false);
+    }
+
+    return (
+        <div className="context-menu" style={{top: y, left: x}}>
+            <ul>
+                <li onClick={handleClose}>Cerrar {table}</li>
+            </ul>
+        </div>
+    );
+};
 
 function DatabaseList({database, order, servers, setServers, setMain}) {
 
-    let { current, setCurrent } = useContext(PanelContext).currentContext; // Usa el hook useContext para acceder al contexto
+    let {current, setCurrent} = useContext(PanelContext).currentContext; // Usa el hook useContext para acceder al contexto
+    const [close, setClose] = useState(false);
 
     async function handleGetTables(event) {
+
+        setClose(false);
+
         event.preventDefault();
         event.stopPropagation();
 
@@ -35,6 +58,8 @@ function DatabaseList({database, order, servers, setServers, setMain}) {
         getTables({database})
             .then(result => {
 
+                setMain({});
+
                 element.removeChild(loadingDiv);
 
                 let serverConnect = null;
@@ -56,12 +81,12 @@ function DatabaseList({database, order, servers, setServers, setMain}) {
                             const databasesCopyArray = server.arr_databases.map(database => {
 
                                 if (database.order == parseInt(order)) {
-                                    return {...database, tables: Object.values(result.output.tables) };
+                                    return {...database, tables: Object.values(result.output.tables)};
                                 } else {
                                     return database;
                                 }
                             });
-                            return {...server, arr_databases: databasesCopyArray, active: true };
+                            return {...server, arr_databases: databasesCopyArray, active: true};
                         } else {
                             return {...server, active: false};
                         }
@@ -70,23 +95,6 @@ function DatabaseList({database, order, servers, setServers, setMain}) {
 
                     // Actualizar el estado de React con el nuevo array modificado
                     setServers(serversCopyArray);
-
-                    const Toast = Swal.mixin({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 1000,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.addEventListener('mouseenter', Swal.stopTimer)
-                            toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        }
-                    })
-
-                    Toast.fire({
-                        icon: 'success',
-                        title: `Conexion establecida con AQUI`
-                    })
 
                 } else {
 
@@ -105,11 +113,44 @@ function DatabaseList({database, order, servers, setServers, setMain}) {
             });
     }
 
+    //Menu contexto
+    const [contextMenuPos, setContextMenuPos] = useState({x: 0, y: 0});
+    const [showContextMenu, setShowContextMenu] = useState(false);
+
+    const handleContextMenu = (event) => {
+        event.preventDefault();
+        const clickX = event.clientX;
+        const clickY = event.clientY;
+
+        setContextMenuPos({x: clickX, y: clickY});
+        setShowContextMenu(true);
+    };
+
+    const handleCloseContextMenu = () => {
+        setShowContextMenu(false);
+    };
+
+    useEffect(() => {
+        const handleClick = (event) => {
+            if (showContextMenu && !event.target.closest('.context-menu')) {
+                handleCloseContextMenu();
+                setContextMenuPos({x: 0, y: 0});
+            }
+        };
+
+        document.addEventListener('mousedown', handleClick);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClick);
+        };
+    }, [showContextMenu]);
+
     return (
         <>
-            <li key={database.name} className='ms-3' onDoubleClick={handleGetTables}>
+            <li key={database.name} className='ms-3' onDoubleClick={handleGetTables} onContextMenu={handleContextMenu}>
 
-                <a className='conection prevent-select px-3 py-1 w-100 d-inline-block' data-database={database.name} data-order={order}>
+                <a className='conection prevent-select px-3 py-1 w-100 d-inline-block' data-database={database.name}
+                   data-order={order}>
                     <img src={databasePNG}
                          width='24' height='24' alt='' className='align-middle'/>
                     <span className='align-middle'
@@ -117,10 +158,23 @@ function DatabaseList({database, order, servers, setServers, setMain}) {
 
                 </a>
             </li>
-            <ul className='table-list list-group d-block ms-5'>
+            {showContextMenu && (
+                <ContextMenu
+                    className={`context-menu ${showContextMenu ? 'd-flex' : 'd-none'}`}
+                    x={contextMenuPos.x}
+                    y={contextMenuPos.y}
+                    table={database.name}
+                    setClose={setClose}
+                    setShowContextMenu={setShowContextMenu}
+                    onClose={handleCloseContextMenu}
+                />
+            )}
+            <ul className={`${close ? 'd-none' : 'd-block'} table-list list-group d-block ms-5`}>
                 {
                     database.tables.map((table) => {
-                        return <TableList key={table.table} table={table} setMain={setMain}></TableList>
+                        return (
+                            <TableList key={table.table} table={table} setMain={setMain}></TableList>
+                        )
                     })
                 }
             </ul>

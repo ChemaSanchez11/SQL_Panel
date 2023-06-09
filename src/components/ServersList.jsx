@@ -6,12 +6,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import connectServer from "../helpers/connectServer.js";
 import Swal from "sweetalert2";
 import DatabaseList from "./DatabaseList.jsx";
-import {PanelContext, useUserContext} from "../contexts/PanelContext.jsx";
+import {PanelContext, usePanelContext} from "../contexts/PanelContext.jsx";
+import uniqid from "uniqid";
 
 function ServerList({servers, setServers, setStatus, setMain}) {
 
     //Contexto del usuario
-    let {user, setUser} = useUserContext().userContext;
+    let {user, setUser} = usePanelContext().userContext;
+    let [isMenuOpen, setIsMenuOpen] = useState(false);
     let { current, setCurrent } = useContext(PanelContext).currentContext;
 
     // -- Declaracion de los Efectos
@@ -105,7 +107,7 @@ function ServerList({servers, setServers, setStatus, setMain}) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: typeof result !== 'undefined' ? result.output : 'Error al conectar',
+                        text: typeof result !== 'undefined' ? result.output : 'Error al conectar con la base de datos',
                         showConfirmButton: false,
                         showCancelButton: true,
                         cancelButtonText: 'Cerrar',
@@ -119,52 +121,68 @@ function ServerList({servers, setServers, setStatus, setMain}) {
 
 
     return (
-        <div className='bg-dark d-flex col-2'>
-            <ul id='servers' className="list-group bg-dark">
+        <div className='bg-dark d-flex px-0 col-md-2'>
+            <button
+                className='btn btn-dark d-md-none'
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                aria-expanded={isMenuOpen}
+            >
+                <i className="fa-solid fa-bars"></i>
+            </button>
+            <ul
+                id='servers'
+                className={`list-group bg-dark ${isMenuOpen ? 'd-md-block' : 'd-none d-md-block'}`}
+            >
                 {servers.map((server) => {
-                        server.active = server.active === true;
-                        return (
-                            <li key={server.token} onDoubleClick={handleConnect}
-                                className={`${server.active ? 'connected' : 'd-block'}`}>
-                                <a className='server conection prevent-select px-3 py-1 w-100 d-inline-block'
-                                   data-server={server.token} data-id={server.id} data-name={server.host}>
-                                    <img id={server.token + '_' + server.host} src={server.active ? mysql_connect : mysql}
-                                         width='24' height='24' alt='' className='align-middle'/>
-                                    <span className='align-middle'
-                                          style={{fontSize: "18px"}}> {`${server.host} [${server.user}]`}</span>
-                                </a>
-                                <div id='loading' className='mt-2' style={{display: "none"}}>
-                                    <div className='spinner m-auto'>
-                                        <div className='spinner-circle spinner-circle-outer'/>
-                                        <div className='spinner-circle-off spinner-circle-inner'/>
-                                        <div className='spinner-circle spinner-circle-single-1'/>
-                                        <div className='spinner-circle spinner-circle-single-2'/>
-                                    </div>
+                    server.active = server.active === true;
+                    return (
+                        <li
+                            key={server.token}
+                            onDoubleClick={handleConnect}
+                            className={`${server.active ? 'connected' : 'd-block'}`}
+                        >
+                            <a
+                                className='server conection prevent-select px-3 py-1 w-100 d-inline-block'
+                                data-server={server.token}
+                                data-id={server.id}
+                                data-name={server.host}
+                            >
+                                <img
+                                    id={server.token + '_' + server.host}
+                                    src={server.active ? mysql_connect : mysql}
+                                    width='24'
+                                    height='24'
+                                    alt=''
+                                    className='align-middle'
+                                />
+                                <span className='align-middle' style={{ fontSize: '18px' }}>
+                                    {`${server.host} [${server.user}]`}
+                                </span>
+                            </a>
+                            <div id='loading' className='mt-2' style={{ display: 'none' }}>
+                                <div className='spinner m-auto'>
+                                    <div className='spinner-circle spinner-circle-outer'/>
+                                    <div className='spinner-circle-off spinner-circle-inner'/>
+                                    <div className='spinner-circle spinner-circle-single-1'/>
+                                    <div className='spinner-circle spinner-circle-single-2'/>
                                 </div>
+                            </div>
 
-                                <ul id={`'table_${server.id}_${server.host}`} data-id={server.id}
-                                    className={`list-group bg-dark ${server.active ? 'd-block' : 'd-none'}`}>
-                                    {
-                                        server.arr_databases.map((database, order) => {
-                                            return <DatabaseList key={database.name} database={database} order={order}
-                                                                 servers={servers} setServers={setServers} setMain={setMain}/>
-                                        })
-                                    }
-                                </ul>
-
-                            </li>
-                        )
-                    }
-                )}
-
+                            <ul id={`'table_${server.id}_${server.host}`} data-id={server.id}
+                                className={`list-group bg-dark ${server.active ? 'd-block' : 'd-none'}`}>
+                                {
+                                    server.arr_databases.map((database, order) => {
+                                        return <DatabaseList key={database.name} database={database} order={order}
+                                                             servers={servers} setServers={setServers} setMain={setMain}/>
+                                    })
+                                }
+                            </ul>
+                        </li>
+                    );
+                })}
             </ul>
-            <div id="context-menu" className="no-visible">
-                <div className="item" id="close-connection">Cerrar Conexion</div>
-                <div className="item">Editar Conexion</div>
-                <div className="item">Eliminar Conexion</div>
-            </div>
         </div>
-    )
+    );
 }
 
 export default ServerList;

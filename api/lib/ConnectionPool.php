@@ -15,7 +15,7 @@ class ConnectionPool
     public function __construct($dsn, $user, $password, $maxConnections = 5)
     {
         try {
-            $this->db = new PDO($dsn, $user, $password, [PDO::ATTR_PERSISTENT => true]);
+            $this->db = new PDO($dsn, $user, $password, [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
             $this->status = true;
         } catch (PDOException $e) {
             $this->error = 'Error de conexión: ' . $e->errorInfo[2];
@@ -109,19 +109,44 @@ class ConnectionPool
     public function get_records($query)
     {
 
-        $PDO = $this->db;
-        $result = $PDO->prepare($query);
-        $result->execute();
-        $std = [];
 
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $newobj = new stdClass();
-            foreach ($row as $key => $value) {
-                $newobj->{$key} = $value;
+            $PDO = $this->db;
+            $result = $PDO->prepare($query);
+            $result->execute();
+            $std = [];
+
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $newobj = new stdClass();
+                foreach ($row as $key => $value) {
+                    $newobj->{$key} = $value;
+                }
+                $std[] = $newobj;
             }
-            $std[] = $newobj;
+
+            return (object)$std;
+
+    }
+
+    public function delete_rows($table, $query)
+    {
+
+        $data = json_decode($query);
+
+        $where = 'WHERE ';
+        foreach ($data as $key => $value) {
+
+            if(empty($value)) continue;
+
+            if ($where !== "WHERE ") {
+                $where .= " AND ";
+            }
+            $where .= "$key = '" . $value . "'";
         }
 
-        return (object)$std;
+        $PDO = $this->db;
+        $result = $PDO->prepare("DELETE FROM $table $where");
+        $result->execute();
+
+        return true;
     }
 }

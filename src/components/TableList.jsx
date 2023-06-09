@@ -1,16 +1,21 @@
-import React from "react";
+import React, {useEffect, useRef, useState} from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import tablePNG from '/icons/table.png'
 import getRows from "../helpers/getRows.js";
 import Swal from "sweetalert2";
-
+import {usePanelContext} from "../contexts/PanelContext.jsx";
 
 
 function TableList({table, setMain}) {
 
+    let {reload, setReload} = usePanelContext().reloadContext;
+    let {current, setCurrent} = usePanelContext().currentContext;
+
+
     async function handleGetRows(event) {
         event.preventDefault();
         event.stopPropagation();
+
 
         let element = event.target.closest('a');
 
@@ -36,6 +41,8 @@ function TableList({table, setMain}) {
         getRows(data)
             .then(result => {
 
+                setCurrent({table: data.table, database: data.database, server: current.server});
+
                 element.removeChild(loadingDiv);
 
                 if (result.success) {
@@ -60,7 +67,8 @@ function TableList({table, setMain}) {
 
     return (
         <li key={table.table} onDoubleClick={handleGetRows}>
-            <a className='conection prevent-select px-3 py-1 w-100 d-inline-block' data-table={table.table} data-database={table.database}>
+            <a className='conection prevent-select px-3 py-1 w-100 d-inline-block' data-table={table.table}
+               data-database={table.database}>
                 <img src={tablePNG}
                      width='24' height='24' alt='' className='align-middle'/>
                 <span className='align-middle'
