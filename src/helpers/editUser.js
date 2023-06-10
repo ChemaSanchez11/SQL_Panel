@@ -1,6 +1,6 @@
 async function editUser(data) {
 
-    const url = '/external_api/edit_user';
+    const url = '/api/edit_user';
     const options = {
         method: 'POST',
         headers: {

@@ -27,3 +27,18 @@ function decrypt($encryption){
 
     return $decryption;
 }
+
+function query_is_action($query) {
+    $lowercaseQuery = strtolower($query);
+
+    // Patrón de expresión regular para buscar cualquier acción distinta a SELECT
+    $pattern = '/\b(insert\s+into|update|delete\s+from|replace\s+into|truncate\s+table|create\s+table|use|drop\s+table|create\s+database|drop\s+database)\b/i';
+
+    // Verificar si la consulta coincide con el patrón
+    if (preg_match($pattern, $lowercaseQuery)) {
+        return true;
+    }
+
+    // Si no se encontró ninguna acción, se considera una consulta SELECT
+    return false;
+}

@@ -11,12 +11,7 @@ export default defineConfig({
         target: 'http://localhost/SQL_Panel/api/',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
-      },
-      '/external_api': {
-        target: 'http://avsa.dyndns.org/sql_panel/external_api/',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/external_api/, ''),
-      },
+      }
     },
   },
 });

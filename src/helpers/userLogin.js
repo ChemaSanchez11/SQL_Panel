@@ -3,7 +3,7 @@ async function userLogin(data) {
     //Codificamos la contraseña en base64
     data.password = btoa(data.password);
 
-    const url = '/external_api/login';
+    const url = '/api/login';
     const options = {
         method: 'POST',
         headers: {

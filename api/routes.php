@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__. '/src/API.php');
+require_once(__DIR__. '/src/LoginAPI.php');
 
 global $CFG;
 
@@ -8,9 +9,28 @@ global $CFG;
 function getRoute($url) {
 
     global $CFG;
+    $LoginAPI = new LoginAPI();
     $API = new API();
 
     switch($url){
+        case $CFG->wwwroot . '/login':
+            echo $LoginAPI->check_user_login();
+            break;
+        case $CFG->wwwroot . '/register':
+            echo $LoginAPI->create_user();
+            break;
+        case $CFG->wwwroot . '/edit_user':
+            echo $LoginAPI->edit_user();
+            break;
+        case $CFG->wwwroot . '/get_servers':
+            echo $API->get_servers();
+            break;
+        case $CFG->wwwroot . '/add_server':
+            echo $API->add_server();
+            break;
+        case $CFG->wwwroot . '/edit_servers':
+            echo $API->edit_servers();
+            break;
         case $CFG->wwwroot . '/connect':
             echo $API->connect();
             break;

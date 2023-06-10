@@ -1,5 +1,5 @@
 async function getServers(user_id) {
-    const url = '/external_api/get_servers';
+    const url = '/api/get_servers';
     const options = {
         method: 'POST',
         headers: {
