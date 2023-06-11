@@ -1,19 +1,33 @@
-import React, {useContext, useEffect, useState} from 'react';
-import DataTable, {createTheme} from 'react-data-table-component';
+import React, { useContext, useEffect, useState } from 'react';
+import DataTable, { createTheme } from 'react-data-table-component';
 import uniqid from 'uniqid';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
-import {PanelContext} from "../contexts/PanelContext.jsx";
+import { PanelContext } from "../contexts/PanelContext.jsx";
 import deleteRows from "../helpers/deleteRows.js";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 
-const Table = ({main}) => {
+/**
+ * Componente para mostrar una tabla de datos.
+ *
+ * @param {Object} props - Las propiedades del componente.
+ * @param {Object} props.main - Objeto que contiene los datos principales de la tabla.
+ * @returns {JSX.Element} - Elemento JSX que representa la tabla.
+ */
+function Table({ main }) {
     const [tableData, setTableData] = useState([]);
-    let {current} = useContext(PanelContext).currentContext;
+    let { current } = useContext(PanelContext).currentContext;
 
-    const handleRowDelete = (row) => {
+    /**
+     * Maneja el borrado de una fila de la tabla.
+     *
+     * @param {Object} row - Objeto que representa la fila a eliminar.
+     * @returns {void}
+     */
+    function handleRowDelete(row) {
         const updatedData = [];
         let rowDelete = {};
         tableData.forEach((rowData) => {
+            // Compara cada propiedad del objeto de la fila con la fila a eliminar
             if (!Object.entries(rowData).every(([key, value]) => row[key] === value)) {
                 updatedData.push(rowData);
             } else {
@@ -21,11 +35,11 @@ const Table = ({main}) => {
             }
         });
 
-
-        //Llamamos al servicio deleteRows para eliminar
+        // Llamamos al servicio deleteRows para eliminar la fila
         deleteRows(current.database, current.table, JSON.stringify(rowDelete))
             .then(result => {
                 if (!result.success) {
+                    // Muestra un mensaje de error en caso de que falle la eliminación
                     toast.error(result.message, {
                         position: "top-center",
                         autoClose: 5000,
@@ -37,27 +51,27 @@ const Table = ({main}) => {
                         theme: "dark",
                     });
                 } else {
+                    // Actualiza los datos de la tabla después de la eliminación exitosa
                     setTableData(updatedData);
                 }
             })
             .catch((error) => {
                 console.error(error);
             });
-    };
+    }
 
+    // Definición de las columnas de la tabla
     const columns = [
         ...Object.keys(main.rows[0]).map((key) => ({
             name: key,
-            selector: (row) => row[key], // Utilizar una función de selección en lugar de la cadena "id"
+            selector: (row) => row[key], // Utiliza una función de selección en lugar de la cadena "id"
             sortable: true,
         })),
         {
             name: 'Acciones',
             cell: (row) => (
                 <>
-                    <a className="btn btn-secondary"
-                       onClick={() => handleRowDelete(row)}
-                    >
+                    <a className="btn btn-secondary" onClick={() => handleRowDelete(row)}>
                         <i className="fa fa-trash text-warning"></i>
                     </a>
                 </>
@@ -68,7 +82,6 @@ const Table = ({main}) => {
         },
     ];
 
-
     useEffect(() => {
         const formattedData = Object.values(main.rows).map((row) => {
             const formattedRow = {};
@@ -78,28 +91,37 @@ const Table = ({main}) => {
             return formattedRow;
         });
 
-        //Comprobar si tiene datos
+        // Comprobar si tiene datos
         let isEmpty = true;
         columns.forEach(column => {
-
             if (column.name !== 'Acciones') {
                 let key = column.name;
                 if (formattedData[0][key] !== null) {
                     isEmpty = false;
                 }
             }
-
         });
 
+        //Guardamos los datos para pintarlos en la tabla
         isEmpty ? setTableData([]) : setTableData(formattedData);
-
     }, [main.rows]);
 
+    /**
+     * Expande el contenido JSON en la tabla.
+     *
+     * @returns {Promise<void>}
+     */
     async function expandJson() {
         await new Promise(resolve => setTimeout(resolve, 100));
         hljs.highlightAll();
     }
 
+    /**
+     * Maneja la copia del texto en el portapapeles.
+     *
+     * @param {string} query - Consulta a copiar en el portapapeles.
+     * @returns {void}
+     */
     function handleCopy(query) {
         navigator.clipboard.writeText(query)
             .then(() => {
@@ -119,8 +141,13 @@ const Table = ({main}) => {
             });
     }
 
-    function ExpandedComponent({data}) {
-
+    /**
+     * Componente que se muestra al expandir una fila de la tabla.
+     *
+     * @param {Object} data - Datos de la fila expandida.
+     * @returns {JSX.Element} - Elemento JSX que representa la fila expandida.
+     */
+    function ExpandedComponent({ data }) {
         const keys = Object.keys(data).map(key => `\`${key}\``).join(", ");
         const values = Object.values(data).map(value => {
             return isNaN(value) ? `'${value.replace(/'/g, "''")}'` : (value !== "" ? value : "''");
@@ -128,21 +155,19 @@ const Table = ({main}) => {
 
         return (
             <pre>
-                <code className="json">
-                    {JSON.stringify(data, null, 2)}
-                </code>
-                <br/>
+                <code className="json">{JSON.stringify(data, null, 2)}</code>
+                <br />
                 <a className="btn btn-secondary me-2 my-2" title="Copiar" onClick={() => handleCopy(`INSERT INTO \`${current.database}\`.\`${current.table}\` (${keys}) VALUES (${values});`)}>
-                        <i className="fa fa-copy text-warning"></i>
-                    </a>
+                    <i className="fa fa-copy text-warning"></i>
+                </a>
                 <code className="sql mb-2">
-                    {`INSERT INTO \`${current.database}\`.\`${current.table}\` (${keys}) VALUES (${values});`}
+                  {`INSERT INTO \`${current.database}\`.\`${current.table}\` (${keys}) VALUES (${values});`}
                 </code>
             </pre>
-        )
+        );
     }
 
-
+    // Crea un tema personalizado para la tabla
     createTheme('sql_panel', {
         text: {
             primary: 'rgba(255,255,255,0.87)',
@@ -194,6 +219,6 @@ const Table = ({main}) => {
             theme="sql_panel"
         />
     );
-};
+}
 
 export default Table;

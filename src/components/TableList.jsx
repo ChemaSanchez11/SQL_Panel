@@ -1,23 +1,27 @@
-import React, {useEffect, useRef, useState} from "react";
+import React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import tablePNG from '/icons/table.png'
+import tablePNG from '/icons/table.png';
 import getRows from "../helpers/getRows.js";
 import Swal from "sweetalert2";
-import {usePanelContext} from "../contexts/PanelContext.jsx";
+import { usePanelContext } from "../contexts/PanelContext.jsx";
 
-
-function TableList({table, setMain}) {
-
-    let {reload, setReload} = usePanelContext().reloadContext;
-    let {current, setCurrent} = usePanelContext().currentContext;
-
+/**
+ * Componente para las tablas de una database.
+ *
+ * @param {Object} props - Las propiedades del componente.
+ * @param {Object} props.table - Objeto con datos de la tabla.
+ * @param {Object} props.setMain - Función para los datos de la tabla en el datatable de main.
+ * @returns {JSX.Element} - Elemento JSX que representa las tablas.
+ */
+function TableList({ table, setMain }) {
+    let { current, setCurrent } = usePanelContext().currentContext;
 
     async function handleGetRows(event) {
         event.preventDefault();
         event.stopPropagation();
 
-
         let element = event.target.closest('a');
+        let elementMain = document.getElementById('main');
 
         let loadingDiv = document.createElement('div');
         loadingDiv.id = 'loading';
@@ -31,25 +35,27 @@ function TableList({table, setMain}) {
             </div>
         `;
 
-        element.appendChild(loadingDiv);
+        elementMain.appendChild(loadingDiv);
 
         let data = {
             table: element.dataset.table,
             database: element.dataset.database
         }
 
-        getRows(data)
+        getRows(data) // Para obtener los datos de la tabla
             .then(result => {
+                setCurrent({ // Actualizamos el contexto con la tabla, la base de datos y el servidor actual
+                    table: data.table,
+                    database: data.database,
+                    server: current.server
+                });
 
-                setCurrent({table: data.table, database: data.database, server: current.server});
-
-                element.removeChild(loadingDiv);
+                elementMain.removeChild(loadingDiv);
 
                 if (result.success) {
                     result.type = 'table';
-                    setMain(result.output);
+                    setMain(result.output); // Actualizamos el estado 'setMain' con los datos de la tabla obtenidos
                 } else {
-
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
@@ -57,7 +63,7 @@ function TableList({table, setMain}) {
                         showConfirmButton: false,
                         showCancelButton: true,
                         cancelButtonText: 'Cerrar',
-                    })
+                    });
                 }
             })
             .catch((error) => {
@@ -66,13 +72,11 @@ function TableList({table, setMain}) {
     }
 
     return (
+        // Se pinta todas las tablas de esa database
         <li key={table.table} onDoubleClick={handleGetRows}>
-            <a className='conection prevent-select px-3 py-1 w-100 d-inline-block' data-table={table.table}
-               data-database={table.database}>
-                <img src={tablePNG}
-                     width='24' height='24' alt='' className='align-middle'/>
-                <span className='align-middle'
-                      style={{fontSize: "14px"}}> {`${table.table}`}</span>
+            <a className='conection prevent-select px-3 py-1 w-100 d-inline-block text-truncate' data-table={table.table} data-database={table.database}>
+                <img src={tablePNG} width='24' height='24' alt='' className='align-middle' />
+                <span className='align-middle text-truncate' style={{ fontSize: "14px"}}> {`${table.table}`}</span>
             </a>
         </li>
     )

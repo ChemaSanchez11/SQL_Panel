@@ -1,3 +1,9 @@
+/**
+ * @description Esta función realiza una solicitud POST a la URL '/api/get_tables' para obtener las tablas de esa database.
+ *
+ * @param {object} data - Objecto con database a la que vamos a consultar.
+ * @returns {Promise} - Promesa con las tablas de esa database en formato JSON.
+ */
 async function getTables(data) {
     const url = '/api/get_tables';
     const options = {

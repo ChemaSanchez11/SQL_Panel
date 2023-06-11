@@ -5,7 +5,11 @@ require_once(__DIR__. '/src/LoginAPI.php');
 
 global $CFG;
 
-// Retornar la ruta correspondiente al controlador o función
+// Retornar la ruta correspondiente a la funcion
+/**
+ * Gestiona a la funcion que se va a llamar de la API dependiendo de la ruta
+ * @param $url
+ */
 function getRoute($url) {
 
     global $CFG;

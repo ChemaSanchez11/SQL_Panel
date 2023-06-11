@@ -5,8 +5,11 @@ import {useForm} from "react-hook-form";
 import editServers from "../helpers/editServers.js";
 import FormConnections from "./FormConections.jsx";
 import editUser from "../helpers/editUser.js";
+import {useNavigate} from "react-router-dom";
+import {toast} from "react-toastify";
 
 function ModalManage() {
+    const navigate = useNavigate();
 
     let {servers, setServers} = usePanelContext().serversContext;
     let {user, setUser} = usePanelContext().userContext;
@@ -20,10 +23,21 @@ function ModalManage() {
             return false;
         } else {
             data.user_new_password = btoa(data.user_new_password)
+            data.type = 'update';
             editUser(data)
                 .then(result => {
                     if(result.success){
                         setUser(result.output[0]);
+                        toast.success('Usuario editado correctamente!', {
+                            position: "top-right",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "dark",
+                        });
                     }
                 })
                 .catch((error) => {
@@ -32,26 +46,20 @@ function ModalManage() {
         }
     }
 
-    function deleteServer(id){
+    function deleteUser(event, user_id){
+
+        event.preventDefault();
+        event.stopPropagation();
 
         let data = {
-            id: id,
-            type: 'delete'
+            type: 'delete',
+            id: user_id
         }
-
-        editServers(data)
+        editUser(data)
             .then(result => {
                 if(result.success){
-                    let serversUpdated = [];
-
-                    // Actualizar el objeto con id seleccionada
-                    servers.map(server => {
-                        if (server.id != data.id) {
-                            serversUpdated.push(server);
-                        }
-                    });
-
-                    setServers(serversUpdated);
+                    sessionStorage.clear();
+                    navigate("/login");
                 }
             })
             .catch((error) => {
@@ -103,7 +111,7 @@ function ModalManage() {
                                             <div className="form-group">
                                                 <label htmlFor="user_password">Contraseña Antigua</label>
                                                 <input
-                                                    type="text"
+                                                    type="password"
                                                     className="form-control"
                                                     id="user_password"
                                                     {...register("user_password", { required: true })}
@@ -123,7 +131,7 @@ function ModalManage() {
                                             <div className="form-group">
                                                 <label htmlFor="user_new_password">Nueva Contraseña</label>
                                                 <input
-                                                    type="text"
+                                                    type="password"
                                                     className="form-control"
                                                     id="user_new_password"
                                                     {...register("user_new_password", { required: true })}
@@ -136,7 +144,7 @@ function ModalManage() {
                                             </div>
                                             <input type="hidden" defaultValue={user.id} {...register("id")} />
                                             <div className="d-flex">
-                                                <input type="submit" onClick={() => console.log("ELIMINAR")/*deleteUser(server.id)*/}
+                                                <input type="submit" onClick={(event) => deleteUser(event, user.id)}
                                                        className="btn btn-danger d-flex mt-1" data-bs-dismiss="modal" value="Eliminar Cuenta"/>
                                                 <input type="submit" className="btn btn-success d-flex mt-1 ms-auto"
                                                        value="Guardar"/>

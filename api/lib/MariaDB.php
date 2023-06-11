@@ -4,10 +4,16 @@
 class MariaDB
 {
 
-    public $status = false;
-    public $error;
+    public bool $status = false;
+    public ?string $error;
     private $db;
 
+    /**
+     * @param $host
+     * @param $user
+     * @param $pass
+     * @param $port
+     */
     public function __construct($host = '', $user = '', $pass = '', $port = '')
     {
 
@@ -22,6 +28,11 @@ class MariaDB
         return $this->db;
     }
 
+    /**
+     * Devuelve las conexiones de ese usuario
+     * @param $query
+     * @return array|void
+     */
     public function get_conections($query)
     {
 
@@ -46,6 +57,11 @@ class MariaDB
         }
     }
 
+    /**
+     * Obtener datos de una tabla en base a esa query
+     * @param $query
+     * @return stdClass|void|null
+     */
     public function get_record($query)
     {
         $DB = $this->db;
@@ -67,7 +83,12 @@ class MariaDB
         }
     }
 
-    public function insert($query)
+    /**
+     * Inserta datos en esa tabla
+     * @param $query
+     * @return array
+     */
+    public function insert($query): array
     {
         $DB = $this->db;
         $result = mysqli_query($DB, $query);
@@ -78,9 +99,49 @@ class MariaDB
         }
     }
 
-    public function execute($query){
+    /**
+     * Ejecutamos una query en las tablas internas
+     * @param $query
+     * @param $params
+     * @return bool
+     */
+    public function execute($query, $params = []): bool
+    {
         $DB = $this->db;
 
-        return mysqli_query($DB, $query);
+        // Creamos la sentencia preparada
+        $statement = mysqli_prepare($DB, $query);
+
+        if ($statement) {
+            // Vinculamos los parámetros a la query
+            if (!empty($params)) {
+
+                //Para seleccionar el tipo de parametro que es
+                $types = '';
+                foreach ($params as $param) {
+                    if (is_int($param)) {
+                        $types .= 'i'; // Tipo entero (integer)
+                    } elseif (is_float($param)) {
+                        $types .= 'd'; // Tipo de punto flotante (double)
+                    } elseif (is_null($param)) {
+                        $types .= 's'; // Tipo NULL
+                    } else {
+                        $types .= 's'; // Tipo cadena (string) por defecto
+                    }
+                }
+
+                // Agregar la cadena de definición de tipo como primer elemento en el arreglo de parámetros
+                array_unshift($params, $types);
+
+                mysqli_stmt_bind_param($statement, ...$params);
+            }
+
+            // Ejecutamos la sentencia preparada
+            mysqli_stmt_execute($statement);
+            return true;
+        } else {
+            // Si falla devolvemos false
+            return false;
+        }
     }
 }

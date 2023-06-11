@@ -1,3 +1,9 @@
+/**
+ * @description Esta función realiza una solicitud POST a la URL '/api/edit_user' para logearse.
+ *
+ * @param {object} data - Objecto con datos del usuario.
+ * @returns {Promise} - Promesa con los datos del usuario en formato JSON.
+ */
 async function userLogin(data) {
 
     //Codificamos la contraseña en base64

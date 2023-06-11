@@ -1,3 +1,9 @@
+/**
+ * @description Esta función realiza una solicitud POST a la URL '/api/edit_user' para editar el usuario.
+ *
+ * @param {object} data - Objecto con datos del usuario.
+ * @returns {Promise} - Promesa con los datos del usuario en formato JSON.
+ */
 async function editUser(data) {
 
     const url = '/api/edit_user';

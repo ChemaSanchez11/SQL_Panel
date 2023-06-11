@@ -1,6 +1,6 @@
-import React, {useRef, useEffect, useState, useContext} from 'react';
+import React, {useState, useContext} from 'react';
 import Table from "./Table.jsx";
-import AceEditor from 'react-ace';
+import AceEditor from 'react-ace'; //AUNQUE PONGA QUE NO SE USA SI SE UTILIZA PARA LOS TEMAS
 import 'ace-builds/src-noconflict/mode-sql';
 import 'ace-builds/src-noconflict/theme-twilight';
 import {PanelContext} from "../contexts/PanelContext.jsx";
@@ -17,16 +17,24 @@ import getRecords from "../helpers/getRecords.js";
 import QueryBuilder from "./QueryBuilder.jsx";
 import TableResult from "./TableResult.jsx";
 
+/**
+ * @description Componente principal que contiene la lógica principal de la aplicación.
+ * @param {Object} main - Objeto que contiene los datos principales, para ejecutar query y resultados o para datos de una tabla.
+ * @returns {JSX.Element} - Elemento JSX que representa el componente principal.
+ */
 function Main({main}) {
 
-    let {current} = useContext(PanelContext).currentContext; // Usa el hook useContext para acceder al contexto
+    let {current} = useContext(PanelContext).currentContext; // Se usa para hacer la consulta a la database actual
 
     const [values, setValues] = useState({})
 
+    /**
+     * @description Funcion que ejecuta esa query en el servidor
+     */
     function handleRunQuery() {
         const value = document.getElementsByClassName('ace_line')[0].textContent;
-        if (!current.database) {
-            toast('❓ Seleccione una base de datos', {
+        if(!current.server){
+            toast('❓ Seleccione un servidor ', {
                 position: "top-center",
                 autoClose: 500,
                 hideProgressBar: false,
@@ -35,13 +43,22 @@ function Main({main}) {
                 draggable: true,
                 theme: "dark",
             });
-
+        } else if (!current.database) {
+            toast('❓ Seleccione una base de datos ', {
+                position: "top-center",
+                autoClose: 500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "dark",
+            });
             return false;
         } else {
             getRecords(current.database, value)
                 .then(result => {
                     if (typeof result !== 'undefined' && result.success) {
-                        //Si es un accion como delete o insert
+                        //Si es un accion como delete o insert no pintamos la tabla de resultados
                         if(typeof result.message != 'undefined'){
                             let value = {
                                 type: 'action_done',
@@ -53,6 +70,7 @@ function Main({main}) {
                             setValues(result.output);
                         }
                     } else if (!result.success) {
+                        // Si hay un error en la consulta mostramos la tabla con la informacion del error
                         let value = {
                             type: 'query_error',
                             error: result.message,
@@ -66,6 +84,10 @@ function Main({main}) {
         }
     }
 
+    /**
+     * @description Funcion cuando se le da click al boton de informacion de database o servidor.
+     * @param {String} type tipo de boton seleccionado.
+     */
     function handleClick(type) {
         if (type === 'server') {
             toast(current.server ? ('✅ Servidor: ' + current.server) : '❓ Seleccione un servidor', {
@@ -88,68 +110,67 @@ function Main({main}) {
                 theme: "dark",
             });
         }
-
     }
 
 
-    if (typeof main !== 'undefined' && typeof main.rows !== 'undefined' && main.type != 'query') {
+    if (typeof main !== 'undefined' && typeof main.rows !== 'undefined' && main.type !== 'query') { //Si es para mostrar datos de una tabla
         return (
-            <div className="bg-dark px-0 col-md-10">
+            <div id="main" className="bg-dark px-0 col-md-10">
                 <Table main={main}></Table>
             </div>
         );
-    } else if (main.type === 'query') {
+    } else if (main.type === 'query') { //Si el tipo es query mostramos el contenedor para ejecutar la query y los resultados
         return (
-            <div className="bg-dark px-0 col-md-10">
+            <div id="main" className="bg-dark px-0 col-md-10">
                 <ToastContainer/>
 
                 <div className="d-flex">
-                    {current.server &&
+                    {current.server && //Si esta conectado a un servidor muestra en verde
                         <button onClick={() => handleClick('server')} type="button"
                                 className="btn btn-current btn-success my-1">
-                            <img className="current-ico" src={mysql_connect}/> <span>{current.server}</span>
+                            <img className="current-ico" src={mysql_connect} alt=""/> <span>{current.server}</span>
                         </button>
                     }
 
-                    {!current.server &&
+                    {!current.server && //Si no esta conectado muestra el boton en rojo
                         <button onClick={() => handleClick('server')} type="button"
                                 className="btn btn-current btn-danger my-1">
-                            <img className="current-ico" src={mysql}/> <span>{current.server}</span>
+                            <img className="current-ico" src={mysql} alt=""/> <span>{current.server}</span>
                         </button>
                     }
 
 
-                    {current.database &&
+                    {current.database && //Si esta conectado a una database muestra en verde y su nombre
                         <button type="button" onClick={handleClick}
                                 className="btn btn-current btn-success my-1 ms-2 text-center">
-                            <img className="current-ico" src={database_active}/> <span
+                            <img className="current-ico" src={database_active} alt=""/> <span
                             className="ms-1">{current.database}</span>
                         </button>
                     }
 
-                    {!current.database &&
+                    {!current.database && //Si no esta conectado muestra el boton en rojo
                         <button type="button" onClick={handleClick}
                                 className="btn btn-current btn-danger my-1 ms-2 text-center">
-                            <img className="current-ico" src={database}/>
+                            <img className="current-ico" src={database} alt=""/>
                         </button>
                     }
 
                     <button className="btn ms-4 d-flex align-items-center" title="Ejecutar" onClick={handleRunQuery}>
-                        <img className="run-ico" src={run_query}/>
+                        <img className="run-ico" src={run_query} alt=""/>
                     </button>
 
                 </div>
 
                 <QueryBuilder/>
 
-                {(values.type === 'query_result' && values.rows) &&
+                {(values.type === 'query_result' && values.rows) && //Mostrar datatable con resultado de la query
                     <>
                         <TableResult main={values}></TableResult>
                     </>
 
                 }
 
-                {(values.type === 'action_done') &&
+                {(values.type === 'action_done') && //Mostrar tabla con resultado de la accion
 
                     <table className="table table-dark">
                         <thead>
@@ -168,7 +189,7 @@ function Main({main}) {
 
                 }
 
-                {(values.error && values.type === 'query_error') &&
+                {(values.error && values.type === 'query_error') && //Mostrar tabla con error en la query
 
                     <table className="table table-dark">
                         <thead>
@@ -190,7 +211,7 @@ function Main({main}) {
         )
     } else {
         return (
-            <div className="bg-dark d-flex px-0 col-md-10">
+            <div id="main" className="bg-dark d-flex px-0 col-md-10">
             </div>
         )
     }

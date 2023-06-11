@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useForm} from "react-hook-form";
 import userLogin from "../helpers/userLogin.js";
 import userRegister from "../helpers/userRegister.js";
@@ -68,6 +68,7 @@ function Login() {
             userRegister(data)
                 .then(result => {
                     if (typeof result !== 'undefined' && result.success) {
+                        updateUserAndNavigate(result.output);
                     } else if (result.error === 3) {
 
                         Toast.fire({

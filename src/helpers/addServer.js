@@ -1,3 +1,9 @@
+/**
+ * @description Esta función realiza una solicitud POST a la URL '/api/add_server' para guardar la nueva conexion.
+ *
+ * @param {object} data - Objecto con datos del servidor, host, puerto, usuario y contraseña.
+ * @returns {Promise} - Promesa con las conexiones del usuario en formato JSON.
+ */
 async function addServer(data) {
     const url = '/api/add_server';
     const options = {

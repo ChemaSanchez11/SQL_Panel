@@ -1,3 +1,10 @@
+/**
+ * @description Esta función realiza una solicitud POST a la URL '/api/get_servers' para obtener los servidores asociados a un usuario.
+ * Utiliza el ID de usuario. Retorna una promesa que se resuelve con los servidores obtenidos en formato JSON.
+ *
+ * @param {string} user_id - ID del usuario para obtener los servidores.
+ * @returns {Promise} - Promesa con los servidores obtenidos en formato JSON.
+ */
 async function getServers(user_id) {
     const url = '/api/get_servers';
     const options = {

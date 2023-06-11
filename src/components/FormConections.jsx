@@ -34,7 +34,9 @@ function FormConnections({server}) {
             });
     }
 
-    function deleteServer(id) {
+    function deleteServer(event, id) {
+        event.preventDefault();
+        event.stopPropagation();
 
         let data = {
             id: id,
@@ -48,12 +50,12 @@ function FormConnections({server}) {
 
                     // Actualizar el objeto con id seleccionada
                     servers.map(server => {
-                        if (server.id != data.id) {
+                        if (server.id !== data.id) {
                             serversUpdated.push(server);
                         }
                     });
 
-                    setServers(serversUpdated);let {servers, setServers} = usePanelContext().serversContext;
+                    setServers(serversUpdated);
                 }
             })
             .catch((error) => {
@@ -146,10 +148,8 @@ function FormConnections({server}) {
                         <input type="hidden" defaultValue={defaultValues.id} {...register("id")} />
                         <input type="hidden" defaultValue={defaultValues.user_id} {...register("user_id")} />
                         <div className="d-flex">
-                            <input type="submit" onClick={() => deleteServer(server.id)}
-                                   className="btn btn-danger d-flex mt-1" data-bs-dismiss="modal" value="Eliminar"/>
-                            <input type="submit" className="btn btn-success d-flex mt-1 ms-auto" data-bs-dismiss="modal"
-                                   value="Guardar"/>
+                            <input type="submit" onClick={(event) => deleteServer(event, server.id)} className="btn btn-danger d-flex mt-1" data-bs-dismiss="modal" value="Eliminar"/>
+                            <input type="submit" className="btn btn-success d-flex mt-1 ms-auto" data-bs-dismiss="modal" value="Guardar"/>
                         </div>
                     </form>
                 </div>

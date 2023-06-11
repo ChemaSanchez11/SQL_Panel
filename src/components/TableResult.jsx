@@ -8,7 +8,7 @@ const TableResult = ({ main }) => {
 
     const columns = Object.keys(main.rows[0]).map((key) => ({
         name: key,
-        selector: key,
+        selector: (row) => row[key], // Utiliza una función de selección en lugar de la cadena "id"
         sortable: true,
     }));
 
@@ -27,10 +27,13 @@ const TableResult = ({ main }) => {
         hljs.highlightAll();
     }
 
-    const ExpandedComponent = ({ data }) =>
-        <pre><code className="json">
-        {JSON.stringify(data, null, 2)}
-        </code></pre>;
+    function ExpandedComponent({ data }){
+        return (
+            <pre>
+                <code className="json">{JSON.stringify(data, null, 2)}</code>
+            </pre>
+        );
+    }
 
     createTheme('sql_panel', {
         text: {

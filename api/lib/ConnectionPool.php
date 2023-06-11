@@ -8,9 +8,9 @@
 
 class ConnectionPool
 {
-    private $db;
-    public $status;
-    public $error;
+    private PDO $db;
+    public bool $status;
+    public string $error;
 
     public function __construct($dsn, $user, $password, $maxConnections = 5)
     {
@@ -28,6 +28,10 @@ class ConnectionPool
         return (object)['status' => $this->status, 'error' => $this->error];
     }
 
+    /**
+     * Devuelve las databases de una conexion
+     * @return array|false
+     */
     public function get_databases()
     {
 
@@ -42,17 +46,25 @@ class ConnectionPool
         return $result->fetchAll(PDO::FETCH_COLUMN, 0);
     }
 
-    public function show_tables($database)
+    /**
+     * Devuelve las tablas de esa database
+     * @param $database
+     * @return object
+     */
+    public function show_tables($database): object
     {
 
         $PDO = $this->db;
-        $result = $PDO->prepare("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA ='$database'");
+        if($database === 'information_schema'){
+            $result = $PDO->prepare("SELECT * FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'information_schema';");
+        } else {
+            $result = $PDO->prepare("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA ='$database'");
+        }
         $result->execute();
         $std = [];
 
         while ($row = $result->fetch()) {
             $newobj = new stdClass();
-            //foreach ($row as $object) {
             $newobj->database = $row["TABLE_SCHEMA"];
             $newobj->table_type = $row["TABLE_TYPE"];
             $newobj->table = $row["TABLE_NAME"];
@@ -62,18 +74,23 @@ class ConnectionPool
             $newobj->comment = $row["TABLE_COMMENT"];
             $newobj->engine = $row["ENGINE"];
             $newobj->collation = $row["TABLE_COLLATION"];
-            //}
             $std[] = $newobj;
         }
 
         return (object)$std;
     }
 
-    public function get_rows($table, $database)
+    /**
+     * Devuelve datos de una tabla
+     * @param $table
+     * @param $database
+     * @return object
+     */
+    public function get_rows($table, $database): object
     {
 
         $PDO = $this->db;
-        $result = $PDO->prepare("SELECT * FROM `$database`.`$table` LIMIT 0,1000");
+        $result = $PDO->prepare("SELECT * FROM `$database`.`$table`");
         $result->execute();
         $rows = [];
 
@@ -106,7 +123,12 @@ class ConnectionPool
         return (object)$rows;
     }
 
-    public function get_records($query)
+    /**
+     * Devuelve los resultados de la query
+     * @param $query
+     * @return object
+     */
+    public function get_records($query): object
     {
 
 
@@ -127,7 +149,13 @@ class ConnectionPool
 
     }
 
-    public function delete_rows($table, $query)
+    /**
+     * Elimina datos de esa tabla
+     * @param $table
+     * @param $query
+     * @return bool
+     */
+    public function delete_rows($table, $query): bool
     {
 
         $data = json_decode($query);

@@ -1,3 +1,9 @@
+/**
+ * @description Esta función realiza una solicitud POST a la URL '/api/edit_servers' para editar la conexion.
+ *
+ * @param {object} data - Objecto con datos del servidor, host, puerto, usuario y contraseña.
+ * @returns {Promise} - Promesa con las conexiones del usuario en formato JSON.
+ */
 async function editServers(data) {
     const url = '/api/edit_servers';
     const options = {

@@ -1,14 +1,22 @@
-import React, {useContext, useState} from "react";
+import React from "react";
 import AceEditor from "react-ace";
-const QueryBuilder = () => {
-    const handleCodeChange = (value) => {
-        // Aquí puedes implementar la lógica para aplicar estilos a palabras clave
-        // Por ejemplo, puedes usar expresiones regulares para resaltar las palabras clave
 
-        const formattedText = value.replace(/\b(SELECT|FROM|WHERE)\b/g, '<span class="keyword">$&</span>');
+/**
+ * @description Componente con el editor de querys AceEditor.
+ * @returns {JSX.Element} - Elemento JSX que representa el componente editor de querys.
+ */
+function QueryBuilder() {
 
-        return formattedText;
-    };
+    /**
+     * Reemplaza las palabras clave SELECT, FROM y WHERE en el código con una versión resaltada en HTML.
+     *
+     * @param {string} value - Query que se va a poner con el formato.
+     * @returns {string} - Query modificada con las palabras clave resaltadas.
+     */
+    function handleCodeChange(value) {
+        //Buscamos las palabras SELECT FROM y WHERE para reemplazarlo por una clase con su color
+        return value.replace(/\b(SELECT|FROM|WHERE|INNER|JOIN|LEFT|RIGHT)\b/g, '<span class="keyword">$&</span>');
+    }
 
     return (
         <AceEditor

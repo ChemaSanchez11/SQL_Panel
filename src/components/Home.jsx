@@ -23,10 +23,12 @@ function Home() {
         <>
             <Nav status={status} setMain={setMain}/>
             <div className="row w-100 m-0">
-                <ServersList servers={servers} setServers={setServers} setStatus={setStatus} setMain={setMain}/>
+                {/*ServerList es el menu a la izquierda donde se pintan los servidores*/}
+                <ServersList setStatus={setStatus} setMain={setMain}/>
+                {/*Main es el contenido principal, a la derecha*/}
                 <Main main={main}/>
             </div>
-            <ModalAddHost servers={servers} setServers={setServers}/>
+            <ModalAddHost/>
             <ModalInfo/>
         </>
     );

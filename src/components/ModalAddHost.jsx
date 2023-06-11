@@ -3,10 +3,11 @@ import {useForm} from "react-hook-form";
 import addServer from "../helpers/addServer.js";
 import {usePanelContext} from "../contexts/PanelContext.jsx";
 
-function ModalAddHost({ servers , setServers }) {
+function ModalAddHost() {
 
     //Contexto del usuario
     let {user, setUser} = usePanelContext().userContext;
+    let {servers, setServers} = usePanelContext().serversContext;
 
     const { register, handleSubmit, formState: { errors }, watch } = useForm({
         defaultValues: {
@@ -21,6 +22,11 @@ function ModalAddHost({ servers , setServers }) {
                 if(servers.success){
                     //Si tiene conexiones pasamos a array la respuesta y la asignamos a servers
                     if(servers.output.length) setServers(servers.output);
+                    const modalElement = document.getElementById('modalAddHost');
+                    if (modalElement) {
+                        const modal = bootstrap.Modal.getInstance(modalElement);
+                        modal.hide();
+                    }
                 } else {
                     alert("ERROR");
                 }
@@ -89,7 +95,7 @@ function ModalAddHost({ servers , setServers }) {
                                     El puerto por defecto de los servidores SQL es el 3306.
                                 </small>
                             </div>
-                            <input type="submit" className="btn btn-success d-flex mt-1 ms-auto" data-bs-dismiss="modal" value="Guardar"/>
+                            <input type="submit" className="btn btn-success d-flex mt-1 ms-auto" value="Guardar"/>
                         </form>
                     </div>
                 </div>
