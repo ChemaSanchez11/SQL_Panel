@@ -123,22 +123,52 @@ function Table({ main }) {
      * @returns {void}
      */
     function handleCopy(query) {
-        navigator.clipboard.writeText(query)
-            .then(() => {
-                toast.success('QUERY copiada correctamente!', {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(query)
+                .then(() => {
+                    toast.success('QUERY copiada correctamente!', {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                    });
+                })
+                .catch((error) => {
+                    console.error('Fallo al copiar:', error);
                 });
-            })
-            .catch((error) => {
-                console.error("Error al copiar el texto:", error);
-            });
+        } else {
+            const textArea = document.createElement('textarea');
+            textArea.value = query;
+            document.body.appendChild(textArea);
+            textArea.select();
+
+            try {
+                const copied = document.execCommand('copy');
+                if (copied) {
+                    toast.success('QUERY copiada correctamente!', {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                    });
+                } else {
+                    console.error('Fallo al copiar');
+                }
+            } catch (error) {
+                console.error('Fallo al copiar', error);
+            }
+
+            document.body.removeChild(textArea);
+        }
     }
 
     /**
