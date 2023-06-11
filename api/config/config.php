@@ -11,4 +11,4 @@ global $CFG, $DB;
 $CFG = new stdClass();
 $CFG->wwwroot = '/SQL_Panel/api';
 
-$DB = new MariaDB('localhost', 'root', '', '3306');
+$DB = new MariaDB('localhost', 'root', '', '33306');

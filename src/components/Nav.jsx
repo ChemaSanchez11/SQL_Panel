@@ -149,29 +149,29 @@ function Nav({status, setMain}) {
     return (
         <nav className="navbar navbar-dark justify-content-start">
 
-            <div id="vertical-line" className="mx-2">
-                <a className="navbar-brand" id="add_new_server">
-                    <img src={server_connection} width="45" height="45" alt="" data-bs-toggle="modal"
+            <div id="vertical-line" className="mx-sm-1 mx-md-2">
+                <a className="navbar-brand mx-1" id="add_new_server">
+                    <img src={server_connection} width="38" height="38" alt="" data-bs-toggle="modal"
                          data-bs-target="#modalAddHost"/>
                 </a>
-                <a className="navbar-brand" onClick={handleClick}>
-                    <img src={database_reload} width="45" height="45" alt=""/>
+                <a className="navbar-brand mx-1 mx-md-2" onClick={handleClick}>
+                    <img src={database_reload} width="38" height="38" alt=""/>
                 </a>
             </div>
 
             <a className="navbar-brand ms-2" href="#" onClick={handleQuery}>
-                <img src={query} width="45" height="45" alt=""/>
+                <img src={query} width="38" height="38" alt=""/>
             </a>
 
             <a className="navbar-brand ms-auto" href="#">
-                <img id="status_connect" src={status ? done : status === false ? error : warning} width="38rem"
-                     height="38rem" alt="Estado del servidor" title={status ? 'Correcto' : status === false ? 'Error' : 'Sin Conectar'}/>
+                <img id="status_connect" src={status ? done : status === false ? error : warning} width="34rem"
+                     height="34rem" alt="Estado del servidor" title={status ? 'Correcto' : status === false ? 'Error' : 'Sin Conectar'}/>
             </a>
             <a className="navbar-brand" href="#">
-                <img src={info} width="38rem" height="38rem" alt="" data-bs-toggle="modal" data-bs-target="#modalInfo"/>
+                <img src={info} width="34rem" height="34rem" alt="" data-bs-toggle="modal" data-bs-target="#modalInfo"/>
             </a>
-            <a className="navbar-brand" href="#" onContextMenu={handleContextMenu}>
-                <img src={'/user_photos/' + user.photo} width="38rem" height="38rem"
+            <a className="navbar-brand" href="#" onClick={handleContextMenu} onContextMenu={handleContextMenu}>
+                <img src={'/user_photos/' + user.photo} width="34rem" height="34rem"
                      title={user.username}/>
             </a>
             {showContextMenu && (
